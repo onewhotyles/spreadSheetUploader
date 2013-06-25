@@ -58,7 +58,7 @@ namespace Spreadsheet_Uploader
         string[] config;
         bool renderTableMode = true;
 
-        /* contructor which brings in the prevalue named Configuration COMMENT! */
+        /* contructor which brings in the prevalue named Configuration COMMENT! My Comment*/
         public SpreadsheetDataEditor(umbraco.interfaces.IData Data, string Configuration)
         {
             
