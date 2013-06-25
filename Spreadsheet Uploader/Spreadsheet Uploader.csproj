@@ -203,7 +203,6 @@
   <ItemGroup>
     <Compile Include="EditSpreadsheet.aspx.cs">
       <DependentUpon>EditSpreadsheet.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpreadSheetDataEditor.cs" />
