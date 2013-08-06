@@ -160,6 +160,8 @@ namespace Spreadsheet_Uploader {
 
         private void addSheet(HSSFWorkbook workbook, string sheetName, XmlNodeList xNodeTRs)
         {
+            //umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 8008, "workbook: " + workbook);
+
             if (xNodeTRs.Count==0)
             {
                 return;

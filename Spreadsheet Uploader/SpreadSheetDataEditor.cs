@@ -28,6 +28,8 @@ using umbraco.IO;
 
 namespace Spreadsheet_Uploader
 {
+
+
     //editing on dev!
     public class SpreadsheetDataEditor : System.Web.UI.UpdatePanel, umbraco.interfaces.IDataEditor
     {
@@ -83,8 +85,6 @@ namespace Spreadsheet_Uploader
         {
             if (renderTableMode)
             {
-        
-
                 ltrlCurrentSavedTable.Text = HiddenTableValue.Text.Replace("<br>", "<br />");
                 this._data.Value = HiddenTableValue.Text.Replace("<br>", "<br />");
             }
@@ -123,10 +123,10 @@ namespace Spreadsheet_Uploader
                 
             }
 
-            string css = string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" />", "/umbraco/plugins/SpreadsheetUploader/css/SpreadsheetUploader.css");
+            string css = string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" />", GlobalVariables.datatypePath + "/css/SpreadsheetUploader.css");
             ScriptManager.RegisterClientScriptBlock(Page, typeof(SpreadsheetDataEditor), "spreadsheetUploaderCSS", css, false);
 
-            string js = string.Format("<script href=\"{0}\" type=\"text/javascript\"></script>", "/umbraco/plugins/SpreadsheetUploader/js/extensions.js");
+            string js = string.Format("<script href=\"{0}\" type=\"text/javascript\"></script>", GlobalVariables.datatypePath + "/js/extensions.js");
             ScriptManager.RegisterClientScriptBlock(Page, typeof(SpreadsheetDataEditor), "spreadsheetExtensions", js, false);
 
             if (renderTableMode)
@@ -150,7 +150,7 @@ namespace Spreadsheet_Uploader
                 
                 javascriptInclude = new HtmlGenericControl("script");
                 javascriptInclude.Attributes["type"] = "text/javascript";
-                javascriptInclude.Attributes["src"] = "/umbraco/plugins/SpreadsheetUploader/js/extensions.js";
+                javascriptInclude.Attributes["src"] = GlobalVariables.datatypePath + "/js/extensions.js";
                 base.ContentTemplateContainer.Controls.Add(javascriptInclude);
                 
 
@@ -255,13 +255,13 @@ namespace Spreadsheet_Uploader
                 writer.WriteLine("<div class='controls-list'>");
                 writer.WriteLine("<ul>");
 
-                writer.WriteLine("<li><a class='edit-upload' href=\"javascript:UmbClientMgr.openModalWindow('plugins/SpreadSheetUploader/EditSpreadsheet.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&alias=" + strAlias + "&clientID = " + this.ClientID + "&style=" + styleDDL.SelectedValue + "&type=tbody', 'Edit Spreadsheet Body', true, 960, 630,'','','', function(returnValue){updateTable('tbody', '" + this.ClientID + "', returnValue)} );\">Edit/Upload</a></li>");
+                writer.WriteLine("<li><a class='edit-upload' href=\"javascript:UmbClientMgr.openModalWindow('" + GlobalVariables.datatypePath + "/EditSpreadsheet.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&alias=" + strAlias + "&clientID = " + this.ClientID + "&style=" + styleDDL.SelectedValue + "&type=tbody', 'Edit Spreadsheet Body', true, 960, 630,'','','', function(returnValue){updateTable('tbody', '" + this.ClientID + "', returnValue)} );\">Edit/Upload</a></li>");
 
 
                 if (HiddenTableValue.Text != "")
                 {
                     writer.WriteLine("<li>");
-                    writer.WriteLine("<a id='" + this.ClientID + "_DownloadBody' href=\"plugins/SpreadSheetUploader/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&alias=" + strAlias + "&type=tbody\">Download</a>");
+                    writer.WriteLine("<a id='" + this.ClientID + "_DownloadBody' href=\"" + GlobalVariables.datatypePath + "/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&alias=" + strAlias + "&type=tbody\">Download</a>");
                     writer.WriteLine("</li>");
                 }
                 writer.WriteLine("<li class='style-select'>");
@@ -283,8 +283,8 @@ namespace Spreadsheet_Uploader
             }
             else
             {
-                writer.WriteLine("<a href='plugins/SpreadSheetUploader/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "'>Download All Spreadsheets from This Document</a><br/>");
-                writer.WriteLine("<a href='plugins/SpreadSheetUploader/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&split=true'>Download All Spreadsheets from This Document Split</a>");
+                writer.WriteLine("<a href='" + GlobalVariables.datatypePath + "/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "'>Download All Spreadsheets from This Document</a><br/>");
+                writer.WriteLine("<a href='" + GlobalVariables.datatypePath + "/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&split=true'>Download All Spreadsheets from This Document Split</a>");
             }
         }
     }

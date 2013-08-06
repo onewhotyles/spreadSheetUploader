@@ -34,7 +34,7 @@ namespace Spreadsheet_Uploader
         string strType = HttpContext.Current.Request.QueryString["type"];
         int nodeID = Convert.ToInt32(HttpContext.Current.Request.QueryString["nodeID"]);
         string strAlias = HttpContext.Current.Request.QueryString["alias"];
-        
+
        
         protected void btnUpload_Click(object sender, EventArgs e) {
            
@@ -116,8 +116,8 @@ namespace Spreadsheet_Uploader
 
 
 
-                txtFilePath.SaveAs(Server.MapPath("~/umbraco/plugins/SpreadsheetUploader/TempData/" + txtFilePath.FileName));
-                strNewPath = Server.MapPath("~/umbraco/plugins/SpreadsheetUploader/TempData/" + txtFilePath.FileName);
+                txtFilePath.SaveAs(Server.MapPath("~/" + GlobalVariables.datatypePath + "/TempData/" + txtFilePath.FileName));
+                strNewPath = Server.MapPath("~/" + GlobalVariables.datatypePath + "/TempData/" + txtFilePath.FileName);
 
                 using (FileStream file = new FileStream(strNewPath, FileMode.Open, FileAccess.Read)) {
                     hssfwb = new HSSFWorkbook(file);

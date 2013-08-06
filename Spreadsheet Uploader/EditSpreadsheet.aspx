@@ -5,9 +5,9 @@
 <%@ Import Namespace="umbraco.IO" %>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="/umbraco/plugins/SpreadsheetUploader/css/SpreadsheetUploaderBase.css" />
-<link rel="stylesheet" type="text/css" href="/umbraco/plugins/SpreadsheetUploader/css/SpreadsheetUploader.css" />
-<link rel="stylesheet" type="text/css" href="/umbraco/plugins/SpreadsheetUploader/css/SpreadsheetUploaderModal.css" />
+<link rel="stylesheet" type="text/css" href="<%GlobalVariables.datatypePath.ToString(); %>"/css/SpreadsheetUploaderBase.css" />
+<link rel="stylesheet" type="text/css" href="<%GlobalVariables.datatypePath.ToString(); %>"/css/SpreadsheetUploader.css" />
+<link rel="stylesheet" type="text/css" href="<%GlobalVariables.datatypePath.ToString(); %>"/css/SpreadsheetUploaderModal.css" />
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 
   
@@ -23,19 +23,19 @@
 <script type="text/javascript" src="/umbraco_client/Application/UmbracoClientManager.js"></script>
 <script type="text/javascript" src="/umbraco/plugins/SpreadsheetUploader/js/selectTRs.js"></script>
 
-<script type="text/javascript" src="/umbraco/plugins/SpreadsheetUploader/jHtmlArea/scripts/jquery-1.3.2.js"></script>
-    <script type="text/javascript" src="/umbraco/plugins/SpreadsheetUploader/jHtmlArea/scripts/jquery-ui-1.7.2.custom.min.js"></script>
-    <link rel="Stylesheet" type="text/css" href="/umbraco/plugins/SpreadsheetUploader/jHtmlArea/style/jqueryui/ui-lightness/jquery-ui-1.7.2.custom.css" />
+<script type="text/javascript" src="<%GlobalVariables.datatypePath %>"/jHtmlArea/scripts/jquery-1.3.2.js"></script>
+    <script type="text/javascript" src="<%GlobalVariables.datatypePath %>"/jHtmlArea/scripts/jquery-ui-1.7.2.custom.min.js"></script>
+    <link rel="Stylesheet" type="text/css" href="<%GlobalVariables.datatypePath %>"/jHtmlArea/style/jqueryui/ui-lightness/jquery-ui-1.7.2.custom.css" />
 
-    <script type="text/javascript" src="/umbraco/plugins/SpreadsheetUploader/jHtmlArea/scripts/jHtmlArea-0.7.5.js"></script>
-    <link rel="Stylesheet" type="text/css" href="/umbraco/plugins/SpreadsheetUploader/jHtmlArea/style/jHtmlArea.css" />
+    <script type="text/javascript" src="<%GlobalVariables.datatypePath %>"/jHtmlArea/scripts/jHtmlArea-0.7.5.js"></script>
+    <link rel="Stylesheet" type="text/css" href="<%GlobalVariables.datatypePath %>"/jHtmlArea/style/jHtmlArea.css" />
     
 
 	
 	
     <style type="text/css">
         /* body { background: #ccc;} */
-        div.jHtmlArea .ToolBar ul li a.custom_disk_button 
+        div.jHtmlArea .ToolBar ul li a.custom_disk_button
         {
             background: url(images/disk.png) no-repeat;
             background-position: 0 0;
@@ -48,7 +48,7 @@
 </head>
 <body>
 
-<script type="text/javascript">    
+<script type="text/javascript">
        
     </script>
 
