@@ -131,13 +131,18 @@ namespace SearchTable
                                             //HttpContext.Current.Response.Write(output);
 
                                             tempDoc.LoadXml(item.GetValue(pt).ToString());
-                                            XmlNode xCurrentTable = tempDoc.SelectSingleNode("//table");
+                                            XmlNodeList xCurrentTable = tempDoc.SelectNodes("//table");
 
                                             XmlAttribute xTabName = tempDoc.CreateAttribute("data-tabname");
-                                            xTabName.Value = cmsTab;
-                                            xCurrentTable.Attributes.Append(xTabName);
 
-                                            sb.Append(DeSpanTables(xmlDoc, xCurrentTable));
+                                            foreach (XmlNode xTable in xCurrentTable)
+                                            {
+                                                xTabName.Value = cmsTab;
+                                                xTable.Attributes.Append(xTabName);
+
+                                                sb.Append(DeSpanTables(xmlDoc, xTable));
+
+                                            }
                                         }
 
                                         //            //To get the url of the content, need to use UmbracoHelper to instantiate an object of IPublishedContent
