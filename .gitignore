@@ -1,11 +1,33 @@
 #################
-## Umbraco
+## Eclipse
 #################
-*Digital.Signage/Digital.Signage/App_Data/TEMP*/
-**/Logs/
-**/App_Data/
 
-umbraco.config
+*.pydevproject
+.project
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
 
 #################
 ## Visual Studio
@@ -160,3 +182,34 @@ $RECYCLE.BIN/
 # Mac crap
 .DS_Store
 
+
+#############
+## Python
+#############
+
+*.py[co]
+
+# Packages
+*.egg
+*.egg-info
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+
+#Translations
+*.mo
+
+#Mr Developer
+.mr.developer.cfg
