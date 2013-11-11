@@ -110,6 +110,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\References\build\bin\System.Web.Helpers.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\References\build\bin\System.Web.Razor.dll</HintPath>
@@ -141,6 +143,10 @@
     </Reference>
     <Reference Include="umbraco">
       <HintPath>..\..\..\References\build\bin\umbraco.dll</HintPath>
+    </Reference>
+    <Reference Include="Umbraco.Core, Version=1.0.4954.19342, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\UmbracoCms.Core.6.1.6\lib\Umbraco.Core.dll</HintPath>
     </Reference>
     <Reference Include="umbraco.DataLayer">
       <HintPath>..\..\..\References\build\bin\umbraco.DataLayer.dll</HintPath>
@@ -178,6 +184,7 @@
     <Compile Include="Download.aspx.designer.cs">
       <DependentUpon>Download.aspx</DependentUpon>
     </Compile>
+    <Compile Include="SearchTable.cs" />
     <Compile Include="SessionCore.cs" />
     <Compile Include="SessionTables.asmx.cs">
       <DependentUpon>SessionTables.asmx</DependentUpon>
