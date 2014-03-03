@@ -310,7 +310,7 @@ namespace Spreadsheet_Uploader
                                         strTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
                                     }
                                     else {
-                                        strTable += HttpUtility.HtmlEncode(sheet.GetRow(row).Cells[c].RichStringCellValue);
+                                        strTable += HttpUtility.HtmlEncode(sheet.GetRow(row).Cells[c].RichStringCellValue.ToString().Trim());
                                     }
                                 }
                             }
