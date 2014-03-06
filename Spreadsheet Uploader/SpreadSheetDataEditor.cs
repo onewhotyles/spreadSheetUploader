@@ -17,6 +17,7 @@ using umbraco.editorControls;
 using System.Data.OleDb;
 using System.Data;
 using System.IO;
+using System.Text.RegularExpressions;
 
 using NPOI.HSSF.UserModel;
 using NPOI.HPSF;
@@ -86,6 +87,7 @@ namespace Spreadsheet_Uploader
             if (renderTableMode)
             {
                 ltrlCurrentSavedTable.Text = HiddenTableValue.Text.Replace("<br>", "<br />");
+                HiddenTableValue.Text = Regex.Replace(HiddenTableValue.Text, @"\u00A0", " ");
                 this._data.Value = HiddenTableValue.Text.Replace("<br>", "<br />");
             }
         }

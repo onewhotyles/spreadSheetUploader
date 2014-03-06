@@ -31,45 +31,11 @@ namespace spreadsheet_Uploader
         public void OnApplicationStarting(UmbracoApplication httpApplication, ApplicationContext applicationContext)
         {
         }
-
+       
+          
+        
         protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
         {
-
-            //Umbraco.Core.Services.ContentService.Published += (sender, args) =>
-            //{
-            //    foreach (var item in args.PublishedEntities)
-            //    {
-            //        UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
-            //        IPublishedContent publishedContent = UMHelper.TypedContent(item.Id);
-
-            //        newPage = xmlDoc.CreateNode(XmlNodeType.Element, "page", null);
-
-            //        XmlAttribute id = xmlDoc.CreateAttribute("nodeId");
-            //        id.Value = item.Id.ToString();
-
-            //        XmlAttribute url = xmlDoc.CreateAttribute("url");
-
-            //        url.Value = publishedContent.Url;
-
-            //        var newUrl = new UmbracoHelper(UmbracoContext.Current).NiceUrl(item.Id);
-
-            //        url.Value = newUrl;
-            //        newPage.Attributes.Append(id);
-            //        newPage.Attributes.Append(url);
-
-            //    }
-            //};
-
-            PublishingStrategy.Published += PublishingStrategy_Published;
-            PublishingStrategy.UnPublished += PublishingStrategy_Unpublished;
-
-
-        }
-
-
-        void PublishingStrategy_Published(IPublishingStrategy sender, Umbraco.Core.Events.PublishEventArgs<Umbraco.Core.Models.IContent> e)
-        {
-
             if (!System.IO.File.Exists(HttpContext.Current.Server.MapPath(strFilePath)))
             {
                 StreamWriter sw = new StreamWriter(HttpContext.Current.Server.MapPath(strFilePath), true);
@@ -83,114 +49,176 @@ namespace spreadsheet_Uploader
             string output = "";
             string cmsTab = "";
 
-
-
-            int itemCount = 0;
-            foreach (var item in e.PublishedEntities)
+            Umbraco.Core.Services.ContentService.Published += (sender, args) =>
             {
-
-                //HttpContext.Current.Response.Write(itemCount);
-                //HttpContext.Current.Response.Write("**" + item.ToString() + "**");
-                if (System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + item.ContentType.Alias] != null)
+                int itemCount = 0;
+                foreach (var item in args.PublishedEntities)
                 {
-                    string[] dataTypes;
-                    int count = 0;
 
+                    
+                    UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
+                    IPublishedContent publishedContent = UMHelper.TypedContent(item.Id);
 
-                    dataTypes = System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + item.ContentType.Alias].Split(',');
-                    //output += System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + item.ContentType.Alias];
-                    if (dataTypes[0] != "")
+                    //If current Item is a product page
+                    if (System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + item.ContentType.Alias] != null)
                     {
-                        foreach (string pt in dataTypes)
-                        {
+                        
+                        newPage = xmlDoc.CreateNode(XmlNodeType.Element, "page", null);
 
-                            output += "property: " + pt + "<br />";
-                            foreach (PropertyGroup ptg in item.PropertyGroups)
+                        XmlAttribute id = xmlDoc.CreateAttribute("nodeId");
+                        id.Value = item.Id.ToString();
+
+
+                        XmlAttribute url = xmlDoc.CreateAttribute("url");
+
+                        var newUrl = new UmbracoHelper(UmbracoContext.Current).NiceUrl(item.Id);
+
+                        //var newUrl = publishedContent.Url;
+
+                        url.Value = newUrl;
+                        newPage.Attributes.Append(id);
+                        newPage.Attributes.Append(url);
+
+
+                        //HttpContext.Current.Response.Write(itemCount);
+                        // HttpContext.Current.Response.Write("**" + item.Name + "**");
+                        output += item.Name + "<br/>";
+                        /*using (StreamWriter _testData = new StreamWriter(HttpContext.Current.Server.MapPath("~/data.txt"), true))
+                        {
+                            _testData.WriteLine(item.Name); // Write the file.
+                        }*/
+                        if (System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + item.ContentType.Alias] != null)
+                        {
+                            string[] dataTypes;
+                            int count = 0;
+
+
+                            dataTypes = System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + item.ContentType.Alias].Split(',');
+                            //output += System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + item.ContentType.Alias];
+                            if (dataTypes[0] != "")
                             {
-                                output += "property: " + pt + " - prg: " + ptg.Name + "<br />";
-                                foreach (PropertyType propType in ptg.PropertyTypes)
+                                foreach (string pt in dataTypes)
                                 {
 
-                                    //output += "tab: " + ptg.Name + ", propAlias: " + propType.Alias + ", propAlias From config: " + pt + "<br />";
-                                    if (propType.Alias == pt)
+                                    //output += "property: " + pt + "<br />";
+                                    foreach (PropertyGroup ptg in item.PropertyGroups)
                                     {
-                                        XmlDocument xd = new XmlDocument();
-                                        xd.LoadXml(item.GetValue(ptg.PropertyTypes.OrderBy(o => o.SortOrder).First().Alias).ToString());
-                                        XmlNode theNode = xd.SelectSingleNode("//names");
-                                        if (theNode != null)
+                                        //output += "property: " + pt + " - prg: " + ptg.Name + "<br />";
+                                        foreach (PropertyType propType in ptg.PropertyTypes)
                                         {
-                                            cmsTab = theNode.InnerText.Replace(" ", "");
-                                            break;
+
+                                            //output += "tab: " + ptg.Name + ", propAlias: " + propType.Alias + ", propAlias From config: " + pt + "<br />";
+                                            if (propType.Alias == pt)
+                                            {
+                                                XmlDocument xd = new XmlDocument();
+                                                xd.LoadXml(item.GetValue(ptg.PropertyTypes.OrderBy(o => o.SortOrder).First().Alias).ToString());
+                                                XmlNode theNode = xd.SelectSingleNode("//names");
+                                                if (theNode != null)
+                                                {
+                                                    cmsTab = theNode.InnerText.Replace(" ", "");
+                                                    break;
+                                                }
+                                            }
+
                                         }
+                                        count++;
+                                        //HttpContext.Current.Response.Write("Count: " + count + "<br />");
                                     }
+                                    //HttpContext.Current.Response.Write(output);
 
+                                    tempDoc.LoadXml(item.GetValue(pt).ToString());
+                                    XmlNodeList xCurrentTable = tempDoc.SelectNodes("//table");
+
+                                    XmlAttribute xTabName = tempDoc.CreateAttribute("data-tabname");
+
+                                    foreach (XmlNode xTable in xCurrentTable)
+                                    {
+                                        xTabName.Value = cmsTab;
+                                        xTable.Attributes.Append(xTabName);
+
+                                        sb.Append(DeSpanTables(xmlDoc, xTable));
+
+                                    }
                                 }
-                                count++;
-                                //HttpContext.Current.Response.Write("Count: " + count + "<br />");
+
+                                //            //To get the url of the content, need to use UmbracoHelper to instantiate an object of IPublishedContent
+                                //            //NOTE:: for some reason, this does not work on first publish.  Must publish twice
+
+                                //UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
+                                //IPublishedContent publishedContent = UMHelper.TypedContent(item.Id);
+
+                                //XmlDocument thePage = new XmlDocument();
+                                //thePage.Load("~/AppData/umbraco.config");
+
+                                //XmlNode newPage = xmlDoc.CreateNode(XmlNodeType.Element, "page", null);
+
+                                //XmlAttribute id = xmlDoc.CreateAttribute("nodeId");
+                                //id.Value = item.Id.ToString();
+                                //newPage.Attributes.Append(id);
+
+                                using (StreamWriter _testData = new StreamWriter(HttpContext.Current.Server.MapPath("~/data.txt"), true))
+                                {
+                                    _testData.WriteLine(sb.ToString()); // Write the file.
+                                }
+                                newPage.InnerXml = sb.ToString();
+                                //try
+                                //{
+                                //    XmlAttribute url = xmlDoc.CreateAttribute("url");
+                                //    url.Value = publishedContent.Url;
+                                //    var newUrl = new UmbracoHelper(UmbracoContext.Current).NiceUrl(item.Id);
+                                //    url.Value = newUrl;
+                                //    newPage.Attributes.Append(url);
+                                //}
+                                //catch
+                                //{
+
+                                //}
+
+                                XmlNode pageNode = xmlDoc.SelectSingleNode("//page[@nodeId ='" + item.Id.ToString() + "']");
+
+                                if (pageNode != null)
+                                {
+                                    xmlDoc.SelectSingleNode("tableIndexer").RemoveChild(pageNode);
+                                }
+
+                                xmlDoc.SelectSingleNode("tableIndexer").AppendChild(newPage);
                             }
-                            //HttpContext.Current.Response.Write(output);
+                            xmlDoc.Save(HttpContext.Current.Server.MapPath(strFilePath));
 
-                            tempDoc.LoadXml(item.GetValue(pt).ToString());
-                            XmlNodeList xCurrentTable = tempDoc.SelectNodes("//table");
-
-                            XmlAttribute xTabName = tempDoc.CreateAttribute("data-tabname");
-
-                            foreach (XmlNode xTable in xCurrentTable)
-                            {
-                                xTabName.Value = cmsTab;
-                                xTable.Attributes.Append(xTabName);
-
-                                sb.Append(DeSpanTables(xmlDoc, xTable));
-
-                            }
                         }
+                        //HttpContext.Current.Response.Write("- <br />"); 
+                        itemCount++;
 
-                        //            //To get the url of the content, need to use UmbracoHelper to instantiate an object of IPublishedContent
-                        //            //NOTE:: for some reason, this does not work on first publish.  Must publish twice
 
+                    }
+                    sb.Clear();
+                }
+            };
+
+            PublishingStrategy.Published += PublishingStrategy_Published;
+            PublishingStrategy.UnPublished += PublishingStrategy_Unpublished;
+
+
+        }
+
+
+        void PublishingStrategy_Published(IPublishingStrategy sender, Umbraco.Core.Events.PublishEventArgs<Umbraco.Core.Models.IContent> e)
+        {
+            foreach (var item in e.PublishedEntities)
+            {
+                 if (System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + item.ContentType.Alias] != null){
+                    XmlNode pageNode = xmlDoc.SelectSingleNode("//page[@nodeId ='" + item.Id.ToString() + "']");
+
+                    if (pageNode.Attributes["url"].Value == "#")
+                    {
                         UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
                         IPublishedContent publishedContent = UMHelper.TypedContent(item.Id);
 
-                        //XmlDocument thePage = new XmlDocument();
-                        //thePage.Load("~/AppData/umbraco.config");
-
-                        //XmlNode newPage = xmlDoc.CreateNode(XmlNodeType.Element, "page", null);
-
-                        //XmlAttribute id = xmlDoc.CreateAttribute("nodeId");
-                        //id.Value = item.Id.ToString();
-                        //newPage.Attributes.Append(id);
-                        newPage.InnerXml = sb.ToString();
-                        //try
-                        //{
-                        //    XmlAttribute url = xmlDoc.CreateAttribute("url");
-                        //    url.Value = publishedContent.Url;
-                        //    var newUrl = new UmbracoHelper(UmbracoContext.Current).NiceUrl(item.Id);
-                        //    url.Value = newUrl;
-                        //    newPage.Attributes.Append(url);
-                        //}
-                        //catch
-                        //{
-
-                        //}
-
-                        XmlNode pageNode = xmlDoc.SelectSingleNode("//page[@nodeId ='" + item.Id.ToString() + "']");
-
-                        if (pageNode != null)
-                        {
-                            xmlDoc.SelectSingleNode("tableIndexer").RemoveChild(pageNode);
-                        }
-
-                        xmlDoc.SelectSingleNode("tableIndexer").AppendChild(newPage);
+                        pageNode.Attributes["url"].Value = publishedContent.Url;
                     }
-                    xmlDoc.Save(HttpContext.Current.Server.MapPath(strFilePath));
-
                 }
-                //HttpContext.Current.Response.Write("- <br />"); 
-                itemCount++;
             }
-
-            //HttpContext.Current.Response.Write(output);
-            //HttpContext.Current.Response.Write(output);
+            
 
         }
 
