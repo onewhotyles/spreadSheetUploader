@@ -1,0 +1,49 @@
+.InlineImagePickerSaveBox{
+    display: none;
+    width: 800px;
+    height: 100px;
+}
+
+.InlineImagePickerWrapperDiv{
+    padding: 4px;
+    border: 1px solid #666;
+    border-top: none;
+    width: 90%;
+    height: 300px;
+    overflow-y: scroll;
+    background-color: #fff;
+}
+
+.InlineImageWrapper{
+    border-bottom: 1px solid #ccc;    
+    margin-bottom: 2px;
+    clear: both;
+    overflow: hidden;
+    padding: 2px;
+}
+
+.InlineImageWrapper img{
+
+    float: left;
+}
+
+.InlineImageWrapper .InlineImageDetails{
+    margin-left: 105px;
+}
+
+.InlineImageSelected{
+    background-color: #999;
+    color: #fff;
+}
+
+.InlineImageToolbar{
+    width: 90%;
+    padding: 4px;
+    border: 1px solid #666;
+    background-color: #666;
+}
+
+.InlineImageToolbar img{
+    margin-right: 4px;
+    
+}

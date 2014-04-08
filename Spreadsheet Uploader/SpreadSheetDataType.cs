@@ -4,6 +4,11 @@ using System.Linq;
 using System.Web;
 
 namespace Spreadsheet_Uploader {
+    public static class GlobalVariables
+    {
+        public static string datatypePath = "/App_Plugins/SpreadsheetUploader";
+    }
+
     public class SpreadsheetDataType : umbraco.cms.businesslogic.datatype.BaseDataType, umbraco.interfaces.IDataType {
         private umbraco.interfaces.IDataEditor _Editor;
         private umbraco.interfaces.IData _baseData;

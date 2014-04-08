@@ -32,8 +32,11 @@ namespace Spreadsheet_Uploader {
 
     public partial class Download : System.Web.UI.Page {
         Document doc;
+       
+        string all = "false";
         HSSFWorkbook workbook; 
         XmlDocument XMLDoc;
+        XmlDocument tempXMLDoc;
         string tableHtml;
         XmlNodeList xNodeTRs;
 
@@ -42,8 +45,11 @@ namespace Spreadsheet_Uploader {
         protected void Page_Init(object sender, EventArgs e)
         {
             doc = new Document(Convert.ToInt32(Request.QueryString["nodeID"]));
+            
+            all = Request.QueryString["all"];
             workbook = new HSSFWorkbook();
             XMLDoc = new XmlDocument();
+            tempXMLDoc = new XmlDocument();
 
            
         }
@@ -52,7 +58,15 @@ namespace Spreadsheet_Uploader {
 
             string strAlias = Request.QueryString["alias"];
 
-            exportWorkbook(createHeaderBodyWorkbook(), strAlias + ".xls");
+            if (all == "true")
+            {
+                exportWorkbook(createAllWorkbook(), strAlias + ".xls");
+            }
+            else
+            {
+                exportWorkbook(createHeaderBodyWorkbook(), strAlias + ".xls");
+            }
+            
    
         }
 
@@ -60,18 +74,36 @@ namespace Spreadsheet_Uploader {
         private HSSFWorkbook createAllWorkbook()
         {
             SpreadsheetDataType ss=new SpreadsheetDataType();
-
+            int propCount = 1;
             foreach (umbraco.cms.businesslogic.property.Property prop in doc.GenericProperties)
             {
-                if (prop.PropertyType.DataTypeDefinition.DataType.Id == ss.Id)
-                {
-                    tableHtml = prop.Value.ToString();
-                    XMLDoc.LoadXml(tableHtml);
-                    xNodeTRs = XMLDoc.SelectNodes("table//tr");
-                    addSheet(workbook, prop.PropertyType.Name, xNodeTRs);
+                umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "propID: " + prop.PropertyType.DataTypeDefinition.DataType.Id + " ---- ssID: " + ss.Id);
+                //if (prop.PropertyType.DataTypeDefinition.DataType.Id.ToString() == ss.Id.ToString())
+                //{
+                    umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "propValue: " + prop.Value);
+
+                    
+                    if (prop.Value.ToString().Contains("<table"))
+                    {
+
+                    tempXMLDoc.LoadXml(prop.Value.ToString());
+                  
+                    XmlNodeList Tables = tempXMLDoc.SelectNodes("//table");
+
+                    foreach (XmlNode xTable in Tables)
+                    {
+                        
+                        xNodeTRs = xTable.SelectNodes("thead/tr | tbody/tr");
+                        umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "Table: " + xNodeTRs.Count);
+                        addSheet(workbook, prop.PropertyType.Name + "." + propCount.ToString(), xNodeTRs);
+                        propCount += 1;
+                    }
 
 
-                }
+                    }
+
+
+                //}
             }
 
             return workbook;
@@ -160,6 +192,8 @@ namespace Spreadsheet_Uploader {
 
         private void addSheet(HSSFWorkbook workbook, string sheetName, XmlNodeList xNodeTRs)
         {
+            //umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 8008, "workbook: " + workbook);
+
             if (xNodeTRs.Count==0)
             {
                 return;

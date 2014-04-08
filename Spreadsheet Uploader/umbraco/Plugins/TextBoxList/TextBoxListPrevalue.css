@@ -1,0 +1,12 @@
+.indentedListSaveBox{
+  width:800px;
+  display: none;
+}
+
+.indLimitBox{
+  width: 20px;
+}
+
+.propertypane span{
+  margin-right: 10px;
+}
