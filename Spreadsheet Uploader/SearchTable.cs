@@ -211,10 +211,10 @@ namespace spreadsheet_Uploader
 
                     if (pageNode.Attributes["url"].Value == "#")
                     {
-                        UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
-                        IPublishedContent publishedContent = UMHelper.TypedContent(item.Id);
+                        //UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
+                        //IPublishedContent publishedContent = UMHelper.TypedContent(item.Id);
 
-                        pageNode.Attributes["url"].Value = publishedContent.Url;
+                        //pageNode.Attributes["url"].Value = publishedContent.Url;
                     }
                 }
             }
