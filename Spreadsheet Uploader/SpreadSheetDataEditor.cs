@@ -257,13 +257,13 @@ namespace Spreadsheet_Uploader
                 writer.WriteLine("<div class='controls-list'>");
                 writer.WriteLine("<ul>");
 
-                writer.WriteLine("<li><a class='edit-upload' href=\"javascript:UmbClientMgr.openModalWindow('" + GlobalVariables.datatypePath + "/EditSpreadsheet.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&alias=" + strAlias + "&clientID = " + this.ClientID + "&style=" + styleDDL.SelectedValue + "&type=tbody', 'Edit Spreadsheet Body', true, 960, 630,'','','', function(returnValue){updateTable('tbody', '" + this.ClientID + "', returnValue)} );\">Edit/Upload</a></li>");
+                writer.WriteLine("<li><a class='edit-upload' href=\"javascript:UmbClientMgr.openModalWindow('" + GlobalVariables.datatypePath + "/EditSpreadsheet.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&all=false&alias=" + strAlias + "&clientID = " + this.ClientID + "&style=" + styleDDL.SelectedValue + "&type=tbody', 'Edit Spreadsheet Body', true, 960, 630,'','','', function(returnValue){updateTable('tbody', '" + this.ClientID + "', returnValue)} );\">Edit/Upload</a></li>");
 
 
                 if (HiddenTableValue.Text != "")
                 {
                     writer.WriteLine("<li>");
-                    writer.WriteLine("<a id='" + this.ClientID + "_DownloadBody' href=\"" + GlobalVariables.datatypePath + "/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&alias=" + strAlias + "&type=tbody\">Download</a>");
+                    writer.WriteLine("<a id='" + this.ClientID + "_DownloadBody' href=\"" + GlobalVariables.datatypePath + "/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&all=false&alias=" + strAlias + "&type=tbody\">Download</a>");
                     writer.WriteLine("</li>");
                 }
                 writer.WriteLine("<li class='style-select'>");
@@ -285,8 +285,8 @@ namespace Spreadsheet_Uploader
             }
             else
             {
-                writer.WriteLine("<a href='" + GlobalVariables.datatypePath + "/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "'>Download All Spreadsheets from This Document</a><br/>");
-                writer.WriteLine("<a href='" + GlobalVariables.datatypePath + "/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&split=true'>Download All Spreadsheets from This Document Split</a>");
+                writer.WriteLine("<a href='" + GlobalVariables.datatypePath + "/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&all=true'>Download All Spreadsheets from This Document</a><br/>");
+                //writer.WriteLine("<a href='" + GlobalVariables.datatypePath + "/Download.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&split=true'>Download All Spreadsheets from This Document Split</a>");
             }
         }
     }

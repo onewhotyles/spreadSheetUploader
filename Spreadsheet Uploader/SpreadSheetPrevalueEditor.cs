@@ -34,13 +34,13 @@ namespace Spreadsheet_Uploader {
             _csvBox.CssClass = "umbEditorTextField";
             Controls.Add(_csvBox);
 
-            //checkboxList = new CheckBoxList();
-            //checkboxList.ID = "spreadsheetOptions";
-            //checkboxList.CssClass="spreadsheetOptions";
+            checkboxList = new CheckBoxList();
+            checkboxList.ID = "spreadsheetOptions";
+            checkboxList.CssClass="spreadsheetOptions";
 
-            //checkboxList.Items.Add(new ListItem("Render As Report", "renderAsReport"));
+            checkboxList.Items.Add(new ListItem("Render As Report", "renderAsReport"));
 
-            //Controls.Add(checkboxList);
+            Controls.Add(checkboxList);
         }
 
         public Control Editor
@@ -60,12 +60,14 @@ namespace Spreadsheet_Uploader {
                 {
                     string[] config = Configuration.Split('|');
                     _csvBox.Text = config[0];
-                    //try {
-                    //    checkboxList.SelectedValue = config[1];
-                    //}
-                    //catch {
-                    //    checkboxList.SelectedValue = "";
-                    //}
+                    try
+                    {
+                        checkboxList.SelectedValue = config[1];
+                    }
+                    catch
+                    {
+                        checkboxList.SelectedValue = "";
+                    }
                 }
                 else
                 {
@@ -89,7 +91,7 @@ namespace Spreadsheet_Uploader {
             writer.WriteLine("<label>CSS Style List for Dropdown</label>");
             _csvBox.RenderControl(writer);
 
-            //checkboxList.RenderControl(writer);
+            checkboxList.RenderControl(writer);
         }
 
         public string Configuration
