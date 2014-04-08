@@ -1,0 +1,93 @@
+.TextBoxListWrapper{
+	float: left;
+	padding-bottom: 5px;
+	margin-top: 5px;
+}
+
+.TextBoxListWrapper ul{
+	padding-left:0px;
+}
+.TextBoxListWrapper .textstring-row-set{
+	clear: both;
+	float: left;
+	margin-bottom: 5px;
+}
+
+.TextBoxListWrapper .textstring-row-set .textstring-row-field
+{
+	list-style-type:none;
+    float: left;
+    width: 95%;
+ 	min-width: 700px;
+}
+
+.umbEditorTextField{
+	width: 580px;
+	margin: 0px 5px 5px 5px;
+}
+
+.TextBoxListWrapper .textstring-row-field .textstring-row-sort-a
+{
+	cursor: move;
+	padding-top: 2px;
+	height: 18px;
+	width: 16px;
+	margin-left:12px;
+}
+
+.TextBoxListWrapper .textstring-row-placeholder
+{
+	clear: both;
+	float: left;
+	background-color: #FFEE99;
+	margin-bottom: 5px;
+	
+}
+.TextBoxListWrapper .textstring-row-set .indent_row
+{
+	margin-top:5px;
+}
+
+#body_csvBox{
+ // width: 30px;
+}
+
+.TextBoxListSettingsSaveBox{
+	width:300px;
+	display:none;
+}
+
+
+.delete_row{
+	margin-left:2px;
+
+}
+
+.add_row{
+	margin-left:2px;
+
+}
+
+.indent_row{
+	margin-left:2px;
+}
+
+.clear-button{
+	margin-left:10px;
+}
+
+.import-button{
+	margin-left: 39px;
+}
+
+.sort-placeholder{
+	list-style-type:none;
+    float: left;
+    width: 680px;
+	height: 25px;
+	margin: 5px 0px 10px 0px;
+	padding: 10px 0px 0px 7px;
+	background-color:#FAF4B7;
+	border:1px dotted #aaa;
+	font-weight:bold;
+}

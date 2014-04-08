@@ -99,6 +99,7 @@ namespace Spreadsheet_Uploader
         private void convertToHtml(FileUpload txtFilePath, Literal tableOutput) {
 
             string strTable = "<table id=\"tblEditTable\" class='" + hfStyle.Value + "'>";
+            string strSearchTable = "<spreadsheet><page></page><table id=\"tblEditTable\" class='" + hfStyle.Value + "'>";
             int formattingRunIndex;
             int toIndex = 0;
             int fromIndex = 0;
@@ -147,6 +148,7 @@ namespace Spreadsheet_Uploader
              
                 for (int row = 0; row <= sheet.LastRowNum; row++) {
                     strTable += "<tr>";
+                    strSearchTable += "<tr>";
                     for (int c = 0; c < sheet.GetRow(row).Cells.Count; c++) {
 
                         if (sheet.GetRow(row).GetCell(c) == null) {
@@ -188,52 +190,67 @@ namespace Spreadsheet_Uploader
                             }
                          
                         }
-                       
 
 
+                        strSearchTable += "<td ";
+                        strSearchTable += " axis = '" + cell.ColumnIndex + "'>";
                         if (numberOfMergedRegions > 0) {
                             if (!cell.IsMergedCell) {
                                 strTable += "<td ";
+                                
                             }
                             foreach (NPOI.SS.Util.CellRangeAddress region in cellRange) {
 
                                 // If the region does contain the cell you have just read from the row
-                                if (region.IsInRange(cell.RowIndex, cell.ColumnIndex)) {
+                                if (region.IsInRange(cell.RowIndex, cell.ColumnIndex))
+                                {
                                     // need to get the cell from the top left hand corner of this
                                     int rowNum = region.FirstRow;
                                     int colIndex = region.FirstColumn;
-                                    if (sheet.GetRow(row).Cells[c].CellType == NPOI.SS.UserModel.CellType.NUMERIC) {
+                                    if (sheet.GetRow(row).Cells[c].CellType == NPOI.SS.UserModel.CellType.NUMERIC)
+                                    {
                                         sheet.GetRow(row).Cells[c].SetCellType(NPOI.SS.UserModel.CellType.STRING);
                                     }
 
                                     string theRealValue = sheet.GetRow(row).Cells[c].RichStringCellValue.ToString();
-
-                                    if (theRealValue != "") {
+                                    intColspan = region.LastColumn - region.FirstColumn + 1;
+                                    intRowspan = region.LastRow - region.FirstRow + 1;
+                                    if (theRealValue != "")
+                                    {
                                         strTable += "<td ";
-                                        intColspan = region.LastColumn - region.FirstColumn + 1;
+                                        //intColspan = region.LastColumn - region.FirstColumn + 1;
                                         strTable += "colspan='" + intColspan.ToString() + "' ";
-                                        intRowspan = region.LastRow - region.FirstRow + 1;
+                                        //intRowspan = region.LastRow - region.FirstRow + 1;
                                         strTable += "rowspan='" + intRowspan.ToString() + "' ";
 
                                         strTable += " axis='" + cell.ColumnIndex + "'";
 
                                         strTable += ">";
-
+                                        
+                                        strSearchTable += theRealValue + "</td>";
                                     }
-                                    else {
+                                    else
+                                    {
                                         repeatedCell = true;
+                                        strSearchTable += sheet.GetRow(region.FirstRow).Cells[region.FirstColumn].RichStringCellValue.ToString() + "</td>";
                                     }
                                 }
+                                //else
+                                //{
+                                    //strSearchTable += sheet.GetRow(row).Cells[c].RichStringCellValue.ToString() +"</td>";
+                                //}
                             }
 
                             if (!cell.IsMergedCell) {
+                                
                                 strTable += " axis='" + cell.ColumnIndex + "'>";
+                                //strSearchTable += " axis = '" + cell.ColumnIndex + "'>";
                             }
 
                         }
                         else {
-                            
-                          
+
+                                //strSearchTable += " axis = '" + cell.ColumnIndex + "'>";
                                 strTable += "<td axis='" + cell.ColumnIndex + "'>";
                             
                         }
@@ -258,12 +275,15 @@ namespace Spreadsheet_Uploader
 
                                     if (font.TypeOffset == 1) {
                                         strTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
+                                        strSearchTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
                                     }
                                     else if (font.TypeOffset == 2) {
                                         strTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
+                                        strSearchTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
                                     }
                                     else {
                                         strTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
+                                        strSearchTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
                                     }
                                     font = hssfwb.GetFontAt(rts.GetFontAtIndex(rts.GetIndexOfFormattingRun(formattingRunIndex)));
 
@@ -278,12 +298,15 @@ namespace Spreadsheet_Uploader
                                 font = hssfwb.GetFontAt(rts.GetFontAtIndex(fromIndex));
                                 if (font.TypeOffset == 1) {
                                     strTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
+                                    strSearchTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
                                 }
                                 else if (font.TypeOffset == 2) {
                                     strTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
+                                    strSearchTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
                                 }
                                 else {
                                     strTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
+                                    strSearchTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
                                 }
                             }
                             else {
@@ -293,6 +316,7 @@ namespace Spreadsheet_Uploader
                                 if (font.TypeOffset == 1) {
                                     if (rts.ToString().Substring(fromIndex, subStringLength) != "") {
                                         strTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
+                                        strSearchTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
                                     }
                                     else {
                                     }
@@ -300,25 +324,30 @@ namespace Spreadsheet_Uploader
                                 else if (font.TypeOffset == 2) {
                                     if (rts.ToString().Substring(fromIndex, subStringLength) != "") {
                                         strTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
+                                        strSearchTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
                                     }
                                     else {
                                         strTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString()) + "</sub>";
+                                        strSearchTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString()) + "</sub>";
                                     }
                                 }
                                 else {
                                     if (rts.ToString().Substring(fromIndex, subStringLength) != "") {
                                         strTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
+                                        strSearchTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
                                     }
                                     else {
                                         strTable += HttpUtility.HtmlEncode(sheet.GetRow(row).Cells[c].RichStringCellValue.ToString().Trim());
+                                        strSearchTable += HttpUtility.HtmlEncode(sheet.GetRow(row).Cells[c].RichStringCellValue);
                                     }
                                 }
                             }
-
+                            strSearchTable += "</td>";
                             strTable += "</td>";
                             repeatedCell = false;
                         }
                     }
+                    strSearchTable += "</tr>";
                     strTable += "</tr>";
                     rowCount += 1;
                     strTable = strTable.Replace(Convert.ToChar(13).ToString(), "<br />");
@@ -326,6 +355,7 @@ namespace Spreadsheet_Uploader
                 }
             }
             tableOutput.Text = strTable + "</table>";
+            //tableOutput.Text = strSearchTable + "</table>";
             System.IO.File.Delete(strNewPath);
         }
     }

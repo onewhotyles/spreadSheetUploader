@@ -1,0 +1,7 @@
+.ui-dialog-titlebar .ui-widget-header {
+	background-image:none !important;
+}
+
+.custom_disk_button{
+	background-color:#ff0000;
+}
