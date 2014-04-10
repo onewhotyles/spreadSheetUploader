@@ -100,7 +100,7 @@ namespace Spreadsheet_Uploader
 
             string strTable = "<table id=\"tblEditTable\" class='" + hfStyle.Value + "'>";
             string strSearchTable = "<spreadsheet><page></page><table id=\"tblEditTable\" class='" + hfStyle.Value + "'>";
-            string boldClass = "emphasized";
+            
             int formattingRunIndex;
             int toIndex = 0;
             int fromIndex = 0;
@@ -303,7 +303,7 @@ namespace Spreadsheet_Uploader
                                     {
                                         strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
                                         strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
-                                        spreadSheetCell.Class = boldClass;
+                                        spreadSheetCell.Class = GlobalVariables.boldClass;
                                     }
                                     else
                                     {
@@ -336,7 +336,7 @@ namespace Spreadsheet_Uploader
                                 {
                                     strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
                                     strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
-                                    spreadSheetCell.Class = boldClass;
+                                    spreadSheetCell.Class = GlobalVariables.boldClass;
                                     fullCellValue += HttpUtility.HtmlEncode(rts.ToString());
                                 }
                                 else {
@@ -377,14 +377,14 @@ namespace Spreadsheet_Uploader
                                     {
                                         strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
                                         strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
-                                        spreadSheetCell.Class = boldClass;
+                                        spreadSheetCell.Class = GlobalVariables.boldClass;
                                         fullCellValue += HttpUtility.HtmlEncode(rts.ToString());
                                     }
                                     else
                                     {
                                         strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString()) + "</b>";
                                         strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString()) + "</b>";
-                                        spreadSheetCell.Class = boldClass;
+                                        spreadSheetCell.Class = GlobalVariables.boldClass;
                                         fullCellValue += HttpUtility.HtmlEncode(rts.ToString());
                                     }
                                 }

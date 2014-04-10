@@ -27,6 +27,8 @@ using NPOI.POIFS.FileSystem;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 
+using Spreadsheet_Uploader;
+
 
 namespace Spreadsheet_Uploader {
 
@@ -138,7 +140,7 @@ namespace Spreadsheet_Uploader {
            
       
 
-        private HSSFRichTextString ApplyHtmlTags(string resultXML, HSSFWorkbook workbook) {
+        private HSSFRichTextString ApplyHtmlTags(string resultXML, HSSFWorkbook workbook, string cssClass) {
 
          
 
@@ -148,7 +150,7 @@ namespace Spreadsheet_Uploader {
             string TDtext = XMLDoc.SelectSingleNode("/td").InnerText;
             string tempResult = XMLDoc.SelectSingleNode("/td").InnerXml;
 
-          
+            
 
             HSSFRichTextString formattedRichText = new HSSFRichTextString(TDtext);
 
@@ -183,7 +185,12 @@ namespace Spreadsheet_Uploader {
             }
 
 
-
+            if (cssClass == GlobalVariables.boldClass)
+            {
+                IFont FontWeightBold = workbook.CreateFont();
+                FontWeightBold.Boldweight = 700;
+                formattedRichText.ApplyFont(FontWeightBold);
+            }
 
             return formattedRichText;
 
@@ -236,6 +243,7 @@ namespace Spreadsheet_Uploader {
                                 }
                             }
 
+
                        
                             /*----get Merged cells ------*/
                             //If the cell is merged
@@ -282,8 +290,16 @@ namespace Spreadsheet_Uploader {
                             resultXml = resultXml.Replace("&#216;", "Ø");
                             resultXml = resultXml.Replace("<br />", "\n");
 
+                            //if (xNodeTD.Attributes.GetNamedItem("class") != null)
+                            //{
+                            //    if (xNodeTD.Attributes.GetNamedItem("class").Value == GlobalVariables.boldClass)
+                            //    {
+
+                            //    }
+                            //}
+
                             //convert html tags to Excel font style calls
-                            HSSFRichTextString formattedRichText = ApplyHtmlTags(resultXml, workbook);
+                            HSSFRichTextString formattedRichText = ApplyHtmlTags(resultXml, workbook, xNodeTD.Attributes.GetNamedItem("class").Value);
                             
                             //set the data type of the cell
                             cell.SetCellType(CellType.STRING);

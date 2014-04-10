@@ -20,6 +20,10 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +64,14 @@
     <Reference Include="CookComputing.XmlRpcV2">
       <HintPath>..\..\..\References\build\bin\CookComputing.XmlRpcV2.dll</HintPath>
     </Reference>
+    <Reference Include="DigibizAdvancedMediaPicker, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NAWS\lib\DigibizAdvancedMediaPicker.dll</HintPath>
+    </Reference>
+    <Reference Include="DigibizTree, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NAWS\lib\DigibizTree.dll</HintPath>
+    </Reference>
     <Reference Include="Examine">
       <HintPath>..\..\..\References\build\bin\Examine.dll</HintPath>
     </Reference>
@@ -68,6 +80,18 @@
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\..\..\References\build\bin\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="idseefeld.de.imagecropper">
+      <HintPath>..\..\NAWS\lib\idseefeld.de.imagecropper.dll</HintPath>
+    </Reference>
+    <Reference Include="idseefeld.de.imagecropper.events">
+      <HintPath>..\..\NAWS\lib\idseefeld.de.imagecropper.events.dll</HintPath>
+    </Reference>
+    <Reference Include="idseefeld.de.imagecropper.pevc">
+      <HintPath>..\..\NAWS\lib\idseefeld.de.imagecropper.pevc.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageResizer">
+      <HintPath>..\..\NAWS\lib\ImageResizer.dll</HintPath>
     </Reference>
     <Reference Include="interfaces">
       <HintPath>..\..\..\References\build\bin\interfaces.dll</HintPath>

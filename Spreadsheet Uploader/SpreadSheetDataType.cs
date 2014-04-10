@@ -7,6 +7,7 @@ namespace Spreadsheet_Uploader {
     public static class GlobalVariables
     {
         public static string datatypePath = "/App_Plugins/SpreadsheetUploader";
+        public static string boldClass = "emphasized";
     }
 
     public class SpreadsheetDataType : umbraco.cms.businesslogic.datatype.BaseDataType, umbraco.interfaces.IDataType {
