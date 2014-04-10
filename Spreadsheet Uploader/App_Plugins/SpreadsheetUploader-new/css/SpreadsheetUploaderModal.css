@@ -25,7 +25,7 @@
     margin-right:15px;
 	height:400px;
 	max-height:460px;
-	overflow-x:hidden;
+	overflow-x:auto;
 	overflow-y:auto;
 	/*border-bottom:1px solid #CCCCCC;
 	border-top:1px solid #CCCCCC;*/
