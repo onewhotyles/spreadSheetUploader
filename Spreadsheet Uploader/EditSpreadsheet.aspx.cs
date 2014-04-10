@@ -467,7 +467,7 @@ namespace Spreadsheet_Uploader
 
                     result.Append(">");
 
-                    result.Append(cell.Value);
+                    result.Append(cell.Value.Replace(Convert.ToChar(10).ToString(), "<br />").Replace(Convert.ToChar(13).ToString(), "<br />"));
 
                     result.Append("</td>");
                 }
