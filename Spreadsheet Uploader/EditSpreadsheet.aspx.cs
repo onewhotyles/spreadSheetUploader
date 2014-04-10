@@ -34,7 +34,7 @@ namespace Spreadsheet_Uploader
         string strType = HttpContext.Current.Request.QueryString["type"];
         int nodeID = Convert.ToInt32(HttpContext.Current.Request.QueryString["nodeID"]);
         string strAlias = HttpContext.Current.Request.QueryString["alias"];
-
+        Table spreadSheetTable = new Table();
        
         protected void btnUpload_Click(object sender, EventArgs e) {
            
@@ -89,7 +89,7 @@ namespace Spreadsheet_Uploader
  
             ltrlCurrentSaved.Text = xNodeTable.OuterXml;
             
-           
+            
             lblMessage.Visible = false;
             lblMessage.Visible = false;
 
@@ -100,6 +100,7 @@ namespace Spreadsheet_Uploader
 
             string strTable = "<table id=\"tblEditTable\" class='" + hfStyle.Value + "'>";
             string strSearchTable = "<spreadsheet><page></page><table id=\"tblEditTable\" class='" + hfStyle.Value + "'>";
+            string boldClass = "emphasized";
             int formattingRunIndex;
             int toIndex = 0;
             int fromIndex = 0;
@@ -107,6 +108,10 @@ namespace Spreadsheet_Uploader
             int furthestColumn = 0;
             int rowLastColumn = 0;
             string strNewPath = "";
+            
+
+
+
             if ((txtFilePath.HasFile)) {
                 int numberOfMergedRegions = 0;
                 int rowCount = 0;
@@ -147,6 +152,7 @@ namespace Spreadsheet_Uploader
                 }
              
                 for (int row = 0; row <= sheet.LastRowNum; row++) {
+                    Row spreadSheetRow = new Row();
                     strTable += "<tr>";
                     strSearchTable += "<tr>";
                     for (int c = 0; c < sheet.GetRow(row).Cells.Count; c++) {
@@ -191,8 +197,12 @@ namespace Spreadsheet_Uploader
                          
                         }
 
-
+                        Cell spreadSheetCell = new Cell();
+                        
                         strSearchTable += "<td ";
+
+                        spreadSheetCell.Axis = cell.ColumnIndex; 
+
                         strSearchTable += " axis = '" + cell.ColumnIndex + "'>";
                         if (numberOfMergedRegions > 0) {
                             if (!cell.IsMergedCell) {
@@ -218,11 +228,16 @@ namespace Spreadsheet_Uploader
                                     if (theRealValue != "")
                                     {
                                         strTable += "<td ";
+                                        spreadSheetCell.ColSpan = intColspan;
                                         //intColspan = region.LastColumn - region.FirstColumn + 1;
                                         strTable += "colspan='" + intColspan.ToString() + "' ";
+
+                                        spreadSheetCell.RowSpan = intRowspan;
                                         //intRowspan = region.LastRow - region.FirstRow + 1;
                                         strTable += "rowspan='" + intRowspan.ToString() + "' ";
 
+
+                                        spreadSheetCell.Axis = cell.ColumnIndex;
                                         strTable += " axis='" + cell.ColumnIndex + "'";
 
                                         strTable += ">";
@@ -251,14 +266,14 @@ namespace Spreadsheet_Uploader
                         else {
 
                                 //strSearchTable += " axis = '" + cell.ColumnIndex + "'>";
-                                strTable += "<td axis='" + cell.ColumnIndex + "'>";
+                                strTable += "<td  axis='" + cell.ColumnIndex + "'>";
                             
                         }
                         if (cell.CellType != NPOI.SS.UserModel.CellType.STRING) {
                             cell.SetCellType(NPOI.SS.UserModel.CellType.STRING);
                         }
                         var rts = cell.RichStringCellValue;
-
+                        string fullCellValue = "";
                         if (!repeatedCell) {
 
                             if (rts.NumFormattingRuns > 0) {
@@ -276,14 +291,25 @@ namespace Spreadsheet_Uploader
                                     if (font.TypeOffset == 1) {
                                         strTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
                                         strSearchTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
+                                        fullCellValue += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
+                                        
                                     }
                                     else if (font.TypeOffset == 2) {
                                         strTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
                                         strSearchTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
+                                        fullCellValue += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
                                     }
-                                    else {
+                                    else if (font.Boldweight == 700)
+                                    {
+                                        strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
+                                        strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
+                                        spreadSheetCell.Class = boldClass;
+                                    }
+                                    else
+                                    {
                                         strTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
                                         strSearchTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
+                                        fullCellValue += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
                                     }
                                     font = hssfwb.GetFontAt(rts.GetFontAtIndex(rts.GetIndexOfFormattingRun(formattingRunIndex)));
 
@@ -299,14 +325,24 @@ namespace Spreadsheet_Uploader
                                 if (font.TypeOffset == 1) {
                                     strTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
                                     strSearchTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
+                                    fullCellValue += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
                                 }
                                 else if (font.TypeOffset == 2) {
                                     strTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
                                     strSearchTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
+                                    fullCellValue += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
+                                }
+                                else if (font.Boldweight == 700)
+                                {
+                                    strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
+                                    strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
+                                    spreadSheetCell.Class = boldClass;
+                                    fullCellValue += HttpUtility.HtmlEncode(rts.ToString());
                                 }
                                 else {
                                     strTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
                                     strSearchTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
+                                    fullCellValue += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
                                 }
                             }
                             else {
@@ -317,6 +353,7 @@ namespace Spreadsheet_Uploader
                                     if (rts.ToString().Substring(fromIndex, subStringLength) != "") {
                                         strTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
                                         strSearchTable += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
+                                        fullCellValue += "<sup>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sup>";
                                     }
                                     else {
                                     }
@@ -325,26 +362,55 @@ namespace Spreadsheet_Uploader
                                     if (rts.ToString().Substring(fromIndex, subStringLength) != "") {
                                         strTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
                                         strSearchTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
+                                        fullCellValue += "<sub>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</sub>";
                                     }
                                     else {
                                         strTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString()) + "</sub>";
                                         strSearchTable += "<sub>" + HttpUtility.HtmlEncode(rts.ToString()) + "</sub>";
+                                        fullCellValue += "<sub>" + HttpUtility.HtmlEncode(rts.ToString()) + "</sub>";
+                                       
+                                    }
+                                }
+                                else if (font.Boldweight == 700)
+                                {
+                                    if (rts.ToString().Substring(fromIndex, subStringLength) != "")
+                                    {
+                                        strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
+                                        strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
+                                        spreadSheetCell.Class = boldClass;
+                                        fullCellValue += HttpUtility.HtmlEncode(rts.ToString());
+                                    }
+                                    else
+                                    {
+                                        strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString()) + "</b>";
+                                        strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString()) + "</b>";
+                                        spreadSheetCell.Class = boldClass;
+                                        fullCellValue += HttpUtility.HtmlEncode(rts.ToString());
                                     }
                                 }
                                 else {
                                     if (rts.ToString().Substring(fromIndex, subStringLength) != "") {
                                         strTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
                                         strSearchTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
+                                        fullCellValue += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
+
                                     }
                                     else {
                                         strTable += HttpUtility.HtmlEncode(sheet.GetRow(row).Cells[c].RichStringCellValue.ToString().Trim());
                                         strSearchTable += HttpUtility.HtmlEncode(sheet.GetRow(row).Cells[c].RichStringCellValue);
+                                        fullCellValue += HttpUtility.HtmlEncode(sheet.GetRow(row).Cells[c].RichStringCellValue);
                                     }
                                 }
                             }
                             strSearchTable += "</td>";
                             strTable += "</td>";
+                            spreadSheetCell.Value = fullCellValue;
                             repeatedCell = false;
+
+                            umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "count: " + spreadSheetRow.Cells.Count);
+
+                            spreadSheetRow.Cells.Add(spreadSheetCell);
+                            umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "Made It!: ");
                         }
                     }
                     strSearchTable += "</tr>";
@@ -352,11 +418,114 @@ namespace Spreadsheet_Uploader
                     rowCount += 1;
                     strTable = strTable.Replace(Convert.ToChar(13).ToString(), "<br />");
                     strTable = strTable.Replace(Convert.ToChar(10).ToString(), "<br />");
+
+                    spreadSheetTable.Rows.Add(spreadSheetRow);
                 }
             }
-            tableOutput.Text = strTable + "</table>";
+
+            
+
+            tableOutput.Text = SpitOutTable(spreadSheetTable);
+
+            //tableOutput.Text = strTable + "</table>";
             //tableOutput.Text = strSearchTable + "</table>";
             System.IO.File.Delete(strNewPath);
+        }
+
+
+        public string SpitOutTable(Table table)
+        {
+
+            StringBuilder result = new StringBuilder();
+
+            result.Append("<table id=\"tblEditTable\" class='" + hfStyle.Value + "'>");
+            
+            foreach (Row row in table.Rows)
+            {
+                result.Append("<tr>");
+
+                foreach (Cell cell in row.Cells)
+                {
+
+                    result.Append("<td ");
+
+                    result.Append("class='");
+                    result.Append(cell.Class);
+                    result.Append("' ");
+
+                    result.Append("axis='");
+                    result.Append(cell.Axis);
+                    result.Append("' ");
+
+                    result.Append("colspan='");
+                    result.Append(cell.ColSpan);
+                    result.Append("' ");
+
+                    result.Append("rowspan='");
+                    result.Append(cell.RowSpan);
+                    result.Append("' ");
+
+                    result.Append(">");
+
+                    result.Append(cell.Value);
+
+                    result.Append("</td>");
+                }
+
+                result.Append("</tr>");
+            }
+            result.Append("</table>");
+
+            return result.ToString();
+        }
+
+
+    }
+
+
+ 
+
+
+
+
+
+    public class Table
+    {
+        public List<Row> Rows { get; set; }
+
+        public Table()
+        {
+            Rows = new List<Row>();
+        }
+
+    }
+
+
+    public class Row
+    {
+        public List<Cell> Cells { get; set; }
+      
+
+        public Row()
+        {
+            Cells = new List<Cell>();
+        }
+    }
+
+
+    public class Cell
+    {
+        public int Axis { get; set; }
+        public int ColSpan { get; set; }
+        public int RowSpan { get; set; }
+        public string Class { get; set; }
+        public string Value { get; set; }
+
+        public Cell()
+        {
+            Axis = 0;
+            ColSpan = 1;
+            RowSpan = 1;
         }
     }
 }
