@@ -187,9 +187,11 @@ namespace Spreadsheet_Uploader {
 
             if (cssClass == GlobalVariables.boldClass)
             {
-                IFont FontWeightBold = workbook.CreateFont();
-                FontWeightBold.Boldweight = 700;
-                formattedRichText.ApplyFont(FontWeightBold);
+                //IFont FontWeightBold = workbook.CreateFont();
+                //FontWeightBold.Boldweight = 700;
+                //formattedRichText.ApplyFont(FontWeightBold);
+
+
             }
 
             return formattedRichText;
@@ -290,13 +292,20 @@ namespace Spreadsheet_Uploader {
                             resultXml = resultXml.Replace("&#216;", "Ø");
                             resultXml = resultXml.Replace("<br />", "\n");
 
-                            //if (xNodeTD.Attributes.GetNamedItem("class") != null)
-                            //{
-                            //    if (xNodeTD.Attributes.GetNamedItem("class").Value == GlobalVariables.boldClass)
-                            //    {
+                            if (xNodeTD.Attributes.GetNamedItem("class") != null)
+                            {
+                                if (xNodeTD.Attributes.GetNamedItem("class").Value == GlobalVariables.boldClass)
+                                {
+                                    HSSFCellStyle lightBlue = (HSSFCellStyle)workbook.CreateCellStyle();
+                                    lightBlue.FillForegroundColor = HSSFColor.PALE_BLUE.index;
+                                    lightBlue.FillPattern = FillPatternType.SOLID_FOREGROUND;
+                                    //cell.CellStyle.FillForegroundColor = HSSFColor.BLUE_GREY.index;
+                                    //cell.CellStyle.FillBackgroundColor = HSSFColor.BLUE_GREY.index;
+                                    cell.CellStyle = lightBlue;
 
-                            //    }
-                            //}
+                                    umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "color: " + cell.CellStyle.FillForegroundColor.ToString());
+                                }
+                            }
 
                             //convert html tags to Excel font style calls
                             HSSFRichTextString formattedRichText = ApplyHtmlTags(resultXml, workbook, xNodeTD.Attributes.GetNamedItem("class").Value);

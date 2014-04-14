@@ -272,6 +272,15 @@ namespace Spreadsheet_Uploader
                         if (cell.CellType != NPOI.SS.UserModel.CellType.STRING) {
                             cell.SetCellType(NPOI.SS.UserModel.CellType.STRING);
                         }
+
+                        if (cell.CellStyle.FillForegroundColor != 64)
+                        {
+                            spreadSheetCell.Class = GlobalVariables.boldClass;
+
+                        }
+
+                        umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "color: " + cell.CellStyle.FillForegroundColor);
+
                         var rts = cell.RichStringCellValue;
                         string fullCellValue = "";
                         if (!repeatedCell) {
@@ -407,10 +416,10 @@ namespace Spreadsheet_Uploader
                             spreadSheetCell.Value = fullCellValue;
                             repeatedCell = false;
 
-                            umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "count: " + spreadSheetRow.Cells.Count);
+                           
 
                             spreadSheetRow.Cells.Add(spreadSheetCell);
-                            umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "Made It!: ");
+                            //umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "Made It!: ");
                         }
                     }
                     strSearchTable += "</tr>";

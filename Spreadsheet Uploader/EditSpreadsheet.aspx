@@ -72,10 +72,10 @@
 		<div class="uploadWrap">	
 			<span>Upload new spreadsheet:</span>
 			<asp:FileUpload ID="uFilePath" CssClass="filePath" runat="server" ></asp:FileUpload>
-			<asp:Label ID="lblMessage" CSSClas="error" runat="server">You must choose a .xls file to upload</asp:Label></li>
+			<asp:Label ID="lblMessage" CSSClas="error" runat="server">You must choose a .xls file to upload</asp:Label>
 		</div>
 	</div>
-</div>
+
 	
 	<div class="resultsPane">
 	<div class="header-instructions">	<img src="css/selectHeaderText.png" /></div>
