@@ -5,9 +5,9 @@
 <%@ Import Namespace="umbraco.IO" %>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<%GlobalVariables.datatypePath.ToString(); %>"/css/SpreadsheetUploaderBase.css" />
-<link rel="stylesheet" type="text/css" href="<%GlobalVariables.datatypePath.ToString(); %>"/css/SpreadsheetUploader.css" />
-<link rel="stylesheet" type="text/css" href="<%GlobalVariables.datatypePath.ToString(); %>"/css/SpreadsheetUploaderModal.css" />
+<link rel="stylesheet" type="text/css" href="<%=GlobalVariables.datatypePath.ToString(); %>"/css/SpreadsheetUploaderBase.css" />
+<link rel="stylesheet" type="text/css" href="<%=GlobalVariables.datatypePath.ToString(); %>"/css/SpreadsheetUploader.css" />
+<link rel="stylesheet" type="text/css" href="<%=GlobalVariables.datatypePath.ToString(); %>"/css/SpreadsheetUploaderModal.css" />
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 
   
@@ -23,12 +23,12 @@
 <script type="text/javascript" src="/umbraco_client/Application/UmbracoClientManager.js"></script>
 <script type="text/javascript" src="/umbraco/plugins/SpreadsheetUploader/js/selectTRs.js"></script>
 
-<script type="text/javascript" src="<%GlobalVariables.datatypePath %>"/jHtmlArea/scripts/jquery-1.3.2.js"></script>
-    <script type="text/javascript" src="<%GlobalVariables.datatypePath %>"/jHtmlArea/scripts/jquery-ui-1.7.2.custom.min.js"></script>
+<script type="text/javascript" src="<%=GlobalVariables.datatypePath %>"/jHtmlArea/scripts/jquery-1.3.2.js"></script>
+    <script type="text/javascript" src="<%=GlobalVariables.datatypePath %>"/jHtmlArea/scripts/jquery-ui-1.7.2.custom.min.js"></script>
     <link rel="Stylesheet" type="text/css" href="<%GlobalVariables.datatypePath %>"/jHtmlArea/style/jqueryui/ui-lightness/jquery-ui-1.7.2.custom.css" />
 
-    <script type="text/javascript" src="<%GlobalVariables.datatypePath %>"/jHtmlArea/scripts/jHtmlArea-0.7.5.js"></script>
-    <link rel="Stylesheet" type="text/css" href="<%GlobalVariables.datatypePath %>"/jHtmlArea/style/jHtmlArea.css" />
+    <script type="text/javascript" src="<%=GlobalVariables.datatypePath %>"/jHtmlArea/scripts/jHtmlArea-0.7.5.js"></script>
+    <link rel="Stylesheet" type="text/css" href="<%=GlobalVariables.datatypePath %>"/jHtmlArea/style/jHtmlArea.css" />
     
 
 	
@@ -96,6 +96,7 @@
 		 <input type="button" id="insertButton" value="Insert Into Page" runat="server"/>
         <em> or </em><a href="#" style="color: blue" onClick="UmbClientMgr.closeModalWindow()">cancel</a> 
 	</div>
+    	<asp:HiddenField runat="server" id="hfBoldClass"/>
 <asp:HiddenField runat="server" id="hfFilePath"/>
 <asp:HiddenField runat="server" id="hfStyle"/>
 

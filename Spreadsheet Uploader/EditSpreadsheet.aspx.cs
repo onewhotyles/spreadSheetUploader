@@ -34,6 +34,10 @@ namespace Spreadsheet_Uploader
         string strType = HttpContext.Current.Request.QueryString["type"];
         int nodeID = Convert.ToInt32(HttpContext.Current.Request.QueryString["nodeID"]);
         string strAlias = HttpContext.Current.Request.QueryString["alias"];
+        string strEnableEmphClass = HttpContext.Current.Request.QueryString["emph"];
+        string boldClass = GlobalVariables.boldClass;
+        
+
         Table spreadSheetTable = new Table();
        
         protected void btnUpload_Click(object sender, EventArgs e) {
@@ -45,32 +49,32 @@ namespace Spreadsheet_Uploader
                 lblMessage.Visible = true;
             }
             else if (strFileType == ".xlsx") {
-
                 lblMessage.Text = "Spreadsheet Uploader does not currently support .xlsx.  Please select an .xls file.";
                 insertButton.Disabled = true;
-
-                
             }
             else if (strFileType == ".xls") {
 
                 convertToHtml(uFilePath, ltrlCurrentSaved);
                 insertButton.Disabled = false;
-
             }
             else {
-
                 lblMessage.Text = "You must Select an .xls file for upload.";
                 lblMessage.Visible = true;
             }
         }
 
         protected void Page_Load(object sender, EventArgs e) {
-
             string strStyle = HttpContext.Current.Request.QueryString["style"];
             string strClientID = HttpContext.Current.Request.QueryString["clientID"];
+            hfBoldClass.Value = boldClass;
             hfStyle.Value = strStyle;
             Document theDoc = new Document(nodeID);
-
+            if (strEnableEmphClass == "false")
+            {
+                boldClass = "";
+                hfBoldClass.Value = "false";
+            }
+            
             XmlDocument XMLDoc = new XmlDocument();
             string strTheDoc = "<table class='no-class'><thead></thead><tbody></tbody></table>";
 
@@ -258,7 +262,7 @@ namespace Spreadsheet_Uploader
 
                             if (!cell.IsMergedCell) {
                                 
-                                strTable += " axis='" + cell.ColumnIndex + "'>";
+                                strTable += " axis='" + cell.ColumnIndex + "'>"; 
                                 //strSearchTable += " axis = '" + cell.ColumnIndex + "'>";
                             }
 
@@ -275,7 +279,7 @@ namespace Spreadsheet_Uploader
 
                         if (cell.CellStyle.FillForegroundColor != 64)
                         {
-                            spreadSheetCell.Class = GlobalVariables.boldClass;
+                            spreadSheetCell.Class = boldClass;
 
                         }
 
@@ -312,7 +316,7 @@ namespace Spreadsheet_Uploader
                                     {
                                         strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
                                         strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
-                                        spreadSheetCell.Class = GlobalVariables.boldClass;
+                                        spreadSheetCell.Class = boldClass;
                                     }
                                     else
                                     {
@@ -345,7 +349,7 @@ namespace Spreadsheet_Uploader
                                 {
                                     strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
                                     strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
-                                    spreadSheetCell.Class = GlobalVariables.boldClass;
+                                    spreadSheetCell.Class = boldClass;
                                     fullCellValue += HttpUtility.HtmlEncode(rts.ToString());
                                 }
                                 else {
@@ -386,14 +390,14 @@ namespace Spreadsheet_Uploader
                                     {
                                         strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
                                         strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength)) + "</b>";
-                                        spreadSheetCell.Class = GlobalVariables.boldClass;
+                                        spreadSheetCell.Class = boldClass;
                                         fullCellValue += HttpUtility.HtmlEncode(rts.ToString());
                                     }
                                     else
                                     {
                                         strTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString()) + "</b>";
                                         strSearchTable += "<b>" + HttpUtility.HtmlEncode(rts.ToString()) + "</b>";
-                                        spreadSheetCell.Class = GlobalVariables.boldClass;
+                                        spreadSheetCell.Class = boldClass;
                                         fullCellValue += HttpUtility.HtmlEncode(rts.ToString());
                                     }
                                 }

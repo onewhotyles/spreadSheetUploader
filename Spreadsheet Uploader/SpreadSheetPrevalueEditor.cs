@@ -20,6 +20,7 @@ namespace Spreadsheet_Uploader {
         private umbraco.cms.businesslogic.datatype.BaseDataType _datatype;
         private TextBox _csvBox;
         private CheckBoxList checkboxList;
+        private CheckBoxList checkboxEmph;
         
         public SpreadsheetPrevalueEditor(umbraco.cms.businesslogic.datatype.BaseDataType DataType)
         {
@@ -36,11 +37,17 @@ namespace Spreadsheet_Uploader {
 
             checkboxList = new CheckBoxList();
             checkboxList.ID = "spreadsheetOptions";
-            checkboxList.CssClass="spreadsheetOptions";
-
-            checkboxList.Items.Add(new ListItem("Render As Report", "renderAsReport"));
-
+            checkboxList.CssClass = "spreadsheetOptions";
+            checkboxList.Items.Add(new ListItem("Render As Report", "on"));
             Controls.Add(checkboxList);
+
+            checkboxEmph = new CheckBoxList();
+            checkboxEmph.ID = "Emphasis";
+            checkboxEmph.CssClass = "spreadsheetOptions";
+            checkboxEmph.Items.Add(new ListItem("Enable Cell Color as Emphasis Class", "on"));
+            Controls.Add(checkboxEmph);
+
+          
         }
 
         public Control Editor
@@ -68,6 +75,14 @@ namespace Spreadsheet_Uploader {
                     {
                         checkboxList.SelectedValue = "";
                     }
+                    try
+                    {
+                        checkboxEmph.SelectedValue = config[2];
+                    }
+                    catch
+                    {
+                        checkboxEmph.SelectedValue = "";
+                    }
                 }
                 else
                 {
@@ -80,8 +95,8 @@ namespace Spreadsheet_Uploader {
         public void Save()
         {
             _datatype.DBType = (umbraco.cms.businesslogic.datatype.DBTypes)Enum.Parse(typeof(umbraco.cms.businesslogic.datatype.DBTypes), DBTypes.Ntext.ToString(), true);
-            string data = _csvBox.Text+"|"+checkboxList.SelectedValue;
-
+            string data = _csvBox.Text+"|"+checkboxList.SelectedValue + "|"+checkboxEmph.SelectedValue;
+            umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 7777, "checkBox: " + checkboxList.SelectedValue);
             SqlHelper.ExecuteNonQuery("delete from cmsDataTypePreValues where datatypenodeid = @dtdefid", SqlHelper.CreateParameter("@dtdefid", _datatype.DataTypeDefinitionId));
             SqlHelper.ExecuteNonQuery("insert into cmsDataTypePreValues (datatypenodeid,[value],sortorder,alias) values (@dtdefid,@value,0,'')",SqlHelper.CreateParameter("@dtdefid", _datatype.DataTypeDefinitionId), SqlHelper.CreateParameter("@value", data));
         }
@@ -92,6 +107,7 @@ namespace Spreadsheet_Uploader {
             _csvBox.RenderControl(writer);
 
             checkboxList.RenderControl(writer);
+            checkboxEmph.RenderControl(writer);
         }
 
         public string Configuration

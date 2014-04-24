@@ -67,6 +67,15 @@ namespace Spreadsheet_Uploader {
         protected global::System.Web.UI.HtmlControls.HtmlInputButton insertButton;
         
         /// <summary>
+        /// hfBoldClass control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfBoldClass;
+        
+        /// <summary>
         /// hfFilePath control.
         /// </summary>
         /// <remarks>
