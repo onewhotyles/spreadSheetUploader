@@ -14,6 +14,7 @@ using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 using Umbraco.Core.Publishing;
+using Umbraco.Core.Cache;
 
 namespace spreadsheet_Uploader
 {
@@ -48,7 +49,7 @@ namespace spreadsheet_Uploader
 
             string output = "";
             string cmsTab = "";
-
+        
             Umbraco.Core.Services.ContentService.Published += (sender, args) =>
             {
                 int itemCount = 0;

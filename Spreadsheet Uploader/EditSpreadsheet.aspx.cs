@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Text;
 using System.Collections;
+using System.Text.RegularExpressions;
 using umbraco.cms.businesslogic.web;
 using umbraco.cms.businesslogic.datatype;
 using umbraco;
@@ -417,7 +418,10 @@ namespace Spreadsheet_Uploader
                             }
                             strSearchTable += "</td>";
                             strTable += "</td>";
-                            spreadSheetCell.Value = fullCellValue;
+
+                     
+
+                            spreadSheetCell.Value = Regex.Replace(fullCellValue, "&nbsp;", " ");
                             repeatedCell = false;
 
                            
