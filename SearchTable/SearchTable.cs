@@ -114,14 +114,16 @@ namespace SearchTable
                                                     //output += "tab: " + ptg.Name + ", propAlias: " + propType.Alias + ", propAlias From config: " + pt + "<br />";
                                                     if (propType.Alias == pt)
                                                     {
-                                                        XmlDocument xd = new XmlDocument();
-                                                        xd.LoadXml(item.GetValue(ptg.PropertyTypes.OrderBy(o => o.SortOrder).First().Alias).ToString());
-                                                        XmlNode theNode = xd.SelectSingleNode("//names");
-                                                        if (theNode != null)
-                                                        {
-                                                            cmsTab = theNode.InnerText.Replace(" ", "");
-                                                            break;
-                                                        }
+
+                                                        cmsTab = ptg.Name.Replace(" ","");
+                                                        //XmlDocument xd = new XmlDocument();
+                                                        //xd.LoadXml(item.GetValue(ptg.PropertyTypes.OrderBy(o => o.SortOrder).First().Alias).ToString());
+                                                        //XmlNode theNode = xd.SelectSingleNode("//names");
+                                                        //if (theNode != null)
+                                                        //{
+                                                        //    cmsTab = theNode.InnerText.Replace(" ", "");
+                                                        //    break;
+                                                        //}
                                                     }
 
                                                 }
