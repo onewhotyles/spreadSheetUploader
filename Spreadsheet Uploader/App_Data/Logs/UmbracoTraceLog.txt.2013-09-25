@@ -1,0 +1,9 @@
+2013-09-25 07:58:55,790 [5] WARN  Umbraco.Web.Routing.DefaultUrlProvider - [Thread 21] Couldn't find any page with nodeId=1065. This is most likely caused by the page not being published.
+2013-09-25 07:59:21,077 [5] WARN  Umbraco.Web.Routing.DefaultUrlProvider - [Thread 21] Couldn't find any page with nodeId=1065. This is most likely caused by the page not being published.
+2013-09-25 08:00:31,082 [5] INFO  Umbraco.Core.PluginManager - [Thread 23] Starting resolution types of umbraco.interfaces.ICacheRefresher
+2013-09-25 08:00:31,138 [5] INFO  Umbraco.Core.PluginManager - [Thread 23] Completed resolution of types of umbraco.interfaces.ICacheRefresher, found 22 (took 55ms)
+2013-09-25 08:00:35,155 [5] INFO  umbraco.BusinessLogic.Log - [Thread 21] Redirected log call (please use Umbraco.Core.Logging.LogHelper instead of umbraco.BusinessLogic.Log) | Type: Custom | User: 0 | NodeId: 0 | Comment: Object reference not set to an instance of an object.
+2013-09-25 08:00:35,156 [5] INFO  umbraco.BusinessLogic.Log - [Thread 21] Redirected log call (please use Umbraco.Core.Logging.LogHelper instead of umbraco.BusinessLogic.Log) | Type: Custom | User: 0 | NodeId: 0 | Comment: Object reference not set to an instance of an object.
+2013-09-25 08:00:35,945 [5] INFO  umbraco.BusinessLogic.Log - [Thread 21] Redirected log call (please use Umbraco.Core.Logging.LogHelper instead of umbraco.BusinessLogic.Log) | Type: Custom | User: 0 | NodeId: 0 | Comment: Object reference not set to an instance of an object.
+2013-09-25 08:00:36,036 [5] INFO  umbraco.BusinessLogic.Log - [Thread 21] Redirected log call (please use Umbraco.Core.Logging.LogHelper instead of umbraco.BusinessLogic.Log) | Type: Custom | User: 0 | NodeId: 0 | Comment: Object reference not set to an instance of an object.
+2013-09-25 16:13:54,296 [5] INFO  umbraco.BusinessLogic.Log - [Thread 21] Log scrubbed.  Removed all items older than 2013-07-27 16:13:54

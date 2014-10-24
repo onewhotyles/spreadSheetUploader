@@ -187,19 +187,7 @@ $(function () {
 	$("td:not(.headerClicker)").not(".spacer").click(function () {
 
 		if($('#HtmlArea').val() != ''){
-			
-			//var strHtml = ('#HtmlArea').val();
-			var accom = $('#HtmlArea').clone()
-                .find('span').replaceWith(function() { return this.innerHTML; })
-                .end().html(); 
-				//console.log($('#HtmlArea').val());
 			$('.currently-editing').html($("#HtmlArea").val());
-			
-
-			//$('.currently-editing').html($('.currently-editing').html().replace(/<\/?([a-z]+)[^>]*>/gi, function(match, tag) {
-			//	return (tag.toLowerCase() === "sup" || tag.toLowerCase() === "sub" || tag.toLowerCase() === "br") ? match : "";
-			//}));
-			
 		}
 		
 		
