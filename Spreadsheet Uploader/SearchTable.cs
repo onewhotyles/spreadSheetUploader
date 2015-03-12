@@ -130,15 +130,45 @@ namespace spreadsheet_Uploader
                                     }
                                     //HttpContext.Current.Response.Write(output);
 
+
+                                            //Folowing code was replaced so that we can grab the title of the table
+                                    //tempDoc.LoadXml(item.GetValue(pt).ToString());
+                                    //XmlNodeList xCurrentTable = tempDoc.SelectNodes("//table");
+
+                                    //XmlAttribute xTabName = tempDoc.CreateAttribute("data-tabname");
+                                    //XmlAttribute xTableName = tempDoc.CreateAttribute("data-tablename");
+
+                                    //foreach (XmlNode xTable in xCurrentTable)
+                                    //{
+                                    //    xTabName.Value = cmsTab;
+                                    //    xTable.Attributes.Append(xTabName);
+                                    //    XmlNode xtn = xTable.SelectSingleNode("../../title");
+                                    //    xTableName.Value = xtn.InnerText;
+                                    //    xTable.Attributes.Append(xTableName);
+
+                                    //    sb.Append(DeSpanTables(xmlDoc, xTable));
+
+                                    //}
+
+                                    
+
                                     tempDoc.LoadXml(item.GetValue(pt).ToString());
-                                    XmlNodeList xCurrentTable = tempDoc.SelectNodes("//table");
-
+                                    XmlNodeList xCurrentWidget = tempDoc.SelectNodes("//widget");
+                                  
                                     XmlAttribute xTabName = tempDoc.CreateAttribute("data-tabname");
+                                    XmlAttribute xTableName = tempDoc.CreateAttribute("data-tablename");
 
-                                    foreach (XmlNode xTable in xCurrentTable)
+                                    foreach (XmlNode xWidget in xCurrentWidget)
                                     {
+                                        
+                                        XmlNode xTable = xWidget.SelectSingleNode("spreadsheet/table");
+                                       // HttpContext.Current.Response.Write("<p>widget</p>" + xTable.OuterXml);
+                                        XmlNode xtn = xWidget.SelectSingleNode("title");
                                         xTabName.Value = cmsTab;
                                         xTable.Attributes.Append(xTabName);
+
+                                        xTableName.Value = xtn.InnerText;
+                                        xTable.Attributes.Append(xTableName);
 
                                         sb.Append(DeSpanTables(xmlDoc, xTable));
 
