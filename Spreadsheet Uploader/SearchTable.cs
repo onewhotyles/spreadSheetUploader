@@ -82,7 +82,7 @@ namespace spreadsheet_Uploader
 
 
                         //HttpContext.Current.Response.Write(itemCount);
-                        // HttpContext.Current.Response.Write("**" + item.Name + "**");
+                         //HttpContext.Current.Response.Write("**" + item.Name + "**");
                         output += item.Name + "<br/>";
                         /*using (StreamWriter _testData = new StreamWriter(HttpContext.Current.Server.MapPath("~/data.txt"), true))
                         {
@@ -226,12 +226,14 @@ namespace spreadsheet_Uploader
 
                     }
                     sb.Clear();
+
+                    
                 }
             };
 
             PublishingStrategy.Published += PublishingStrategy_Published;
             PublishingStrategy.UnPublished += PublishingStrategy_Unpublished;
-
+            
 
         }
 
