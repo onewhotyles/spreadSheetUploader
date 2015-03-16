@@ -190,10 +190,10 @@ namespace spreadsheet_Uploader
                                 //id.Value = item.Id.ToString();
                                 //newPage.Attributes.Append(id);
 
-                                using (StreamWriter _testData = new StreamWriter(HttpContext.Current.Server.MapPath("~/data.txt"), true))
-                                {
-                                    _testData.WriteLine(sb.ToString()); // Write the file.
-                                }
+                                //using (StreamWriter _testData = new StreamWriter(HttpContext.Current.Server.MapPath("~/data.txt"), true))
+                                //{
+                                //    _testData.WriteLine(sb.ToString()); // Write the file.
+                                //}
                                 newPage.InnerXml = sb.ToString();
                                 //try
                                 //{
@@ -229,7 +229,30 @@ namespace spreadsheet_Uploader
 
                     
                 }
+
+
+                 
+
             };
+
+            Umbraco.Core.Services.ContentService.Moved += (sender, args) =>
+                    {
+               
+                   
+
+
+                    if (System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + args.Entity.ContentType.Alias] != null)
+                    {
+                        XmlNode pageNode = xmlDoc.SelectSingleNode("//page[@nodeId ='" + args.Entity.Id.ToString() + "']");
+
+                       
+                            UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
+                            IPublishedContent publishedContent = UMHelper.TypedContent(args.Entity.Id);
+
+                            pageNode.Attributes["url"].Value = publishedContent.Url;
+                            xmlDoc.Save(HttpContext.Current.Server.MapPath(strFilePath));
+                    }
+                };
 
             PublishingStrategy.Published += PublishingStrategy_Published;
             PublishingStrategy.UnPublished += PublishingStrategy_Unpublished;
@@ -240,22 +263,21 @@ namespace spreadsheet_Uploader
 
         void PublishingStrategy_Published(IPublishingStrategy sender, Umbraco.Core.Events.PublishEventArgs<Umbraco.Core.Models.IContent> e)
         {
-            foreach (var item in e.PublishedEntities)
-            {
-                 if (System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + item.ContentType.Alias] != null){
-                    XmlNode pageNode = xmlDoc.SelectSingleNode("//page[@nodeId ='" + item.Id.ToString() + "']");
+            //foreach (var item in e.PublishedEntities)
+            //{
+            //    if (System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + item.ContentType.Alias] != null)
+            //    {
+            //        XmlNode pageNode = xmlDoc.SelectSingleNode("//page[@nodeId ='" + item.Id.ToString() + "']");
 
-                    if (pageNode.Attributes["url"].Value == "#")
-                    {
-                        //UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
-                        //IPublishedContent publishedContent = UMHelper.TypedContent(item.Id);
+            //        if (pageNode.Attributes["url"].Value == "#")
+            //        {
+            //            UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
+            //            IPublishedContent publishedContent = UMHelper.TypedContent(item.Id);
 
-                        //pageNode.Attributes["url"].Value = publishedContent.Url;
-                    }
-                }
-            }
-            
-
+            //            pageNode.Attributes["url"].Value = publishedContent.Url;
+            //        }
+            //    }
+            //}
         }
 
         void PublishingStrategy_Unpublished(IPublishingStrategy sender, Umbraco.Core.Events.PublishEventArgs<Umbraco.Core.Models.IContent> e)
