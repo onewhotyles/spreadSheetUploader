@@ -133,10 +133,9 @@ namespace Spreadsheet_Uploader {
                                         xNodeTRs = xTable.SelectNodes("thead/tr | tbody/tr");
                                         //umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "Table: " + xNodeTRs.Count);
                                         //addSheet(workbook, prop.PropertyType.Name + "." + propCount.ToString(), xNodeTRs);
-                                        if (ptg.Name != "Dimensions")
-                                        {
+                                        
                                             addSheet(workbook, ptg.Name + " - " + pt + "." + propCount.ToString(), xNodeTRs);
-                                        }
+                                        
                                         propCount += 1;
                                     }
                                 }
