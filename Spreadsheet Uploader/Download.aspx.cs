@@ -9,12 +9,19 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Text;
 using System.Collections;
+
 using umbraco.cms.businesslogic.web;
 using umbraco.cms.businesslogic.datatype;
 using umbraco;
 using umbraco.NodeFactory;
 using umbraco.editorControls;
 using umbraco.BusinessLogic;
+
+using Umbraco.Core;
+using Umbraco.Core.Models;
+using Umbraco.Web;
+using Umbraco.Core.Publishing;
+using Umbraco.Core.Cache;
 
 using System.Data.OleDb;
 using System.Data;
@@ -33,8 +40,11 @@ using Spreadsheet_Uploader;
 namespace Spreadsheet_Uploader {
 
     public partial class Download : System.Web.UI.Page {
-        Document doc;
-       
+        //Document doc;
+        //IPublishedContent doc;
+        IContent doc;
+        IPublishedContent IPubDoc;
+
         string all = "false";
         HSSFWorkbook workbook; 
         XmlDocument XMLDoc;
@@ -46,8 +56,14 @@ namespace Spreadsheet_Uploader {
 
         protected void Page_Init(object sender, EventArgs e)
         {
-            doc = new Document(Convert.ToInt32(Request.QueryString["nodeID"]));
-            
+            //doc = new Document(Convert.ToInt32(Request.QueryString["nodeID"]));
+            UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
+
+            IPubDoc = UMHelper.TypedContent(Convert.ToInt32(Request.QueryString["nodeID"]));
+
+
+            doc = ApplicationContext.Current.Services.ContentService.GetById(Convert.ToInt32(Request.QueryString["nodeID"]));
+
             all = Request.QueryString["all"];
             workbook = new HSSFWorkbook();
             XMLDoc = new XmlDocument();
@@ -62,11 +78,11 @@ namespace Spreadsheet_Uploader {
 
             if (all == "true")
             {
-                exportWorkbook(createAllWorkbook(), strAlias + ".xls");
+                exportWorkbook(createAllWorkbook(), doc.Name + ".xls");
             }
             else
             {
-                exportWorkbook(createHeaderBodyWorkbook(), strAlias + ".xls");
+                exportWorkbook(createHeaderBodyWorkbook(), doc.Name + "-" + strAlias + ".xls");
             }
             
    
@@ -77,36 +93,75 @@ namespace Spreadsheet_Uploader {
         {
             SpreadsheetDataType ss=new SpreadsheetDataType();
             int propCount = 1;
-            foreach (umbraco.cms.businesslogic.property.Property prop in doc.GenericProperties)
+
+      
+
+            if (System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + doc.ContentType.Alias] != null)
             {
-                umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "propID: " + prop.PropertyType.DataTypeDefinition.DataType.Id + " ---- ssID: " + ss.Id);
-                //if (prop.PropertyType.DataTypeDefinition.DataType.Id.ToString() == ss.Id.ToString())
-                //{
-                    umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "propValue: " + prop.Value);
 
-                    
-                    if (prop.Value.ToString().Contains("<table"))
+                string[] dataTypes;
+                int count = 0;
+
+                dataTypes = System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + doc.ContentType.Alias].Split(',');
+
+                if (dataTypes[0] != "")
+                {
+                    foreach (string pt in dataTypes)
                     {
+                        //umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "Property: " + pt);
+                        //output += "property: " + pt + "<br />";
+                        foreach (PropertyGroup ptg in doc.PropertyGroups)
+                        {
+                           
+                            //output += "property: " + pt + " - prg: " + ptg.Name + "<br />";
+                            foreach (PropertyType propType in ptg.PropertyTypes)
+                            {
+                                //umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 787878, "propType: " + propType.Alias);
+                                //output += "tab: " + ptg.Name + ", propAlias: " + propType.Alias + ", propAlias From config: " + pt + "<br />";
 
-                    tempXMLDoc.LoadXml(prop.Value.ToString());
-                  
-                    XmlNodeList Tables = tempXMLDoc.SelectNodes("//table");
+                               
+                                if (propType.Alias == pt)
+                                {
+                                    
+                                    tempXMLDoc.LoadXml(IPubDoc.GetPropertyValue(pt).ToString());
 
-                    foreach (XmlNode xTable in Tables)
-                    {
-                        
-                        xNodeTRs = xTable.SelectNodes("thead/tr | tbody/tr");
-                        umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "Table: " + xNodeTRs.Count);
-                        addSheet(workbook, prop.PropertyType.Name + "." + propCount.ToString(), xNodeTRs);
-                        propCount += 1;
+                                    XmlNodeList Tables = tempXMLDoc.SelectNodes("//table");
+
+                                    foreach (XmlNode xTable in Tables)
+                                    {
+
+                                        xNodeTRs = xTable.SelectNodes("thead/tr | tbody/tr");
+                                        //umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "Table: " + xNodeTRs.Count);
+                                        //addSheet(workbook, prop.PropertyType.Name + "." + propCount.ToString(), xNodeTRs);
+                                        if (ptg.Name != "Dimensions")
+                                        {
+                                            addSheet(workbook, ptg.Name + " - " + pt + "." + propCount.ToString(), xNodeTRs);
+                                        }
+                                        propCount += 1;
+                                    }
+                                }
+
+                            }
+                            count++;
+                            //HttpContext.Current.Response.Write("Count: " + count + "<br />");
+                        }
+                        //HttpContext.Current.Response.Write(output);
+
                     }
+                }
 
 
-                    }
 
 
-                //}
+
             }
+                   
+                
+               
+
+            
+
+
 
             return workbook;
         }
@@ -117,7 +172,7 @@ namespace Spreadsheet_Uploader {
             string type = Request.QueryString["type"];
             string strIndex = (Convert.ToInt32(Request.QueryString["index"]) + 1).ToString();
 
-            string tableHtml = doc.getProperty(strAlias).Value.ToString();
+            string tableHtml = IPubDoc.GetPropertyValue(strAlias).ToString();
             
             XMLDoc.LoadXml(tableHtml);
 
