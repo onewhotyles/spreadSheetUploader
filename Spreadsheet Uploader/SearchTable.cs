@@ -67,19 +67,24 @@ namespace spreadsheet_Uploader
                         newPage = xmlDoc.CreateNode(XmlNodeType.Element, "page", null);
 
                         XmlAttribute id = xmlDoc.CreateAttribute("nodeId");
+                        XmlAttribute pageName = xmlDoc.CreateAttribute("pageName");
+
+                        pageName.Value = publishedContent.Name;
                         id.Value = item.Id.ToString();
 
 
                         XmlAttribute url = xmlDoc.CreateAttribute("url");
-
-                        var newUrl = new UmbracoHelper(UmbracoContext.Current).NiceUrl(item.Id);
+                        umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "hey");
+                        
+                        //var newUrl = new UmbracoHelper(UmbracoContext.Current).NiceUrl(item.Id);
+                        //umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "Page: " + newUrl);
 
                         //var newUrl = publishedContent.Url;
-
-                        url.Value = newUrl;
+                        var newUrl = "";
+                        //url.Value = newUrl;
                         newPage.Attributes.Append(id);
                         newPage.Attributes.Append(url);
-
+                        newPage.Attributes.Append(pageName);
 
                         //HttpContext.Current.Response.Write(itemCount);
                          //HttpContext.Current.Response.Write("**" + item.Name + "**");
@@ -160,7 +165,7 @@ namespace spreadsheet_Uploader
 
                                     foreach (XmlNode xWidget in xCurrentWidget)
                                     {
-                                        
+                                        umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 165");
                                         XmlNode xTable = xWidget.SelectSingleNode("spreadsheet/table");
                                        // HttpContext.Current.Response.Write("<p>widget</p>" + xTable.OuterXml);
                                         XmlNode xtn = xWidget.SelectSingleNode("title");
@@ -169,8 +174,13 @@ namespace spreadsheet_Uploader
 
                                         xTableName.Value = xtn.InnerText;
                                         xTable.Attributes.Append(xTableName);
-
-                                        sb.Append(DeSpanTables(xmlDoc, xTable));
+                                        umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 174: ");
+                                        var thePathParam = "";
+                                        if (publishedContent.Path != null)
+                                        {
+                                            thePathParam = publishedContent.Path;
+                                        }
+                                        sb.Append(DeSpanTables(xmlDoc, xTable, item.Id.ToString(), thePathParam, cmsTab));
 
                                     }
                                 }
@@ -207,18 +217,18 @@ namespace spreadsheet_Uploader
                                 //{
 
                                 //}
-
+                                umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 212");
                                 XmlNode pageNode = xmlDoc.SelectSingleNode("//page[@nodeId ='" + item.Id.ToString() + "']");
 
                                 if (pageNode != null)
                                 {
                                     xmlDoc.SelectSingleNode("tableIndexer").RemoveChild(pageNode);
                                 }
-
+                                umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 219");
                                 xmlDoc.SelectSingleNode("tableIndexer").AppendChild(newPage);
                             }
                             xmlDoc.Save(HttpContext.Current.Server.MapPath(strFilePath));
-
+                            umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 222");
                         }
                         //HttpContext.Current.Response.Write("- <br />"); 
                         itemCount++;
@@ -324,9 +334,9 @@ namespace spreadsheet_Uploader
             xmlDoc.Save(HttpContext.Current.Server.MapPath(strFilePath));
         }
 
-        private string DeSpanTables(XmlDocument xmlDoc, XmlNode table)
+        private string DeSpanTables(XmlDocument xmlDoc, XmlNode table, string nodeID, string nodePath, string tabName)
         {
-
+            umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 331");
             int colspan = 0;
             int rowspan = 0;
             int rowIndex = 0;
@@ -335,11 +345,24 @@ namespace spreadsheet_Uploader
             bool needsShifted = false;
 
             XmlNodeList xNodeTRs = table.SelectNodes("tbody/tr");
-
+            umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 340");
             foreach (XmlNode xNodeTR in xNodeTRs)
             {
+                umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 343");
                 if (xNodeTR.Name.ToLower() == "tr")         //loop through all the TRs.
                 {
+                    XmlAttribute xNodeID = tempDoc.CreateAttribute("data-nodeID");
+                    XmlAttribute xNodePath = tempDoc.CreateAttribute("data-nodePath");
+                    XmlAttribute xTabName = tempDoc.CreateAttribute("data-tabName");
+                    umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 348");
+                    xNodeID.Value = nodeID;
+                    xNodePath.Value = nodePath;
+                    xTabName.Value = tabName;
+                    umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 352");
+                    xNodeTR.Attributes.Append(xNodeID);
+                    xNodeTR.Attributes.Append(xNodePath);
+                    xNodeTR.Attributes.Append(xTabName);
+
                     foreach (XmlNode xNodeTD in xNodeTR.ChildNodes)
                     {
                         if (xNodeTD.Name.ToLower() == "td")

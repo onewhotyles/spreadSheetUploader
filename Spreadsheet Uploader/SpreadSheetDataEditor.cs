@@ -61,6 +61,7 @@ namespace Spreadsheet_Uploader
         string[] config;
         bool renderTableMode = true;
         string enableEmphasisClass = "false";
+        string CultureUS = "false";
 
         /* contructor which brings in the prevalue named Configuration COMMENT! My Comment*/
         public SpreadsheetDataEditor(umbraco.interfaces.IData Data, string Configuration)
@@ -137,7 +138,17 @@ namespace Spreadsheet_Uploader
             {
 
             }
-           
+            try
+            {
+                if (config[3] == "on")
+                {
+                    CultureUS = "true";
+                }
+            }
+            catch
+            {
+
+            }
 
             string css = string.Format("<link href=\"{0}\" type=\"text/css\" rel=\"stylesheet\" />", GlobalVariables.datatypePath + "/css/SpreadsheetUploader.css");
             ScriptManager.RegisterClientScriptBlock(Page, typeof(SpreadsheetDataEditor), "spreadsheetUploaderCSS", css, false);
@@ -271,7 +282,7 @@ namespace Spreadsheet_Uploader
                 writer.WriteLine("<div class='controls-list'>");
                 writer.WriteLine("<ul>");
 
-                writer.WriteLine("<li><a class='edit-upload' href=\"javascript:UmbClientMgr.openModalWindow('" + GlobalVariables.datatypePath + "/EditSpreadsheet.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&all=false&alias=" + strAlias + "&clientID = " + this.ClientID + "&emph=" + enableEmphasisClass + "&style=" + styleDDL.SelectedValue + "&type=tbody', 'Edit Spreadsheet Body', true, 960, 630,'','','', function(returnValue){updateTable('tbody', '" + this.ClientID + "', returnValue)} );\">Edit/Upload</a></li>");
+                writer.WriteLine("<li><a class='edit-upload' href=\"javascript:UmbClientMgr.openModalWindow('" + GlobalVariables.datatypePath + "/EditSpreadsheet.aspx?nodeID=" + HttpContext.Current.Request.QueryString["id"] + "&all=false&alias=" + strAlias + "&clientID = " + this.ClientID + "&culture=" + CultureUS + "&emph=" + enableEmphasisClass + "&style=" + styleDDL.SelectedValue + "&type=tbody', 'Edit Spreadsheet Body', true, 960, 630,'','','', function(returnValue){updateTable('tbody', '" + this.ClientID + "', returnValue)} );\">Edit/Upload</a></li>");
 
 
                 if (HiddenTableValue.Text != "")

@@ -204,7 +204,10 @@ namespace Spreadsheet_Uploader {
             string TDtext = XMLDoc.SelectSingleNode("/td").InnerText;
             string tempResult = XMLDoc.SelectSingleNode("/td").InnerXml;
 
-            
+            if (TDtext == "")
+            {
+                TDtext = " ";
+            }
 
             HSSFRichTextString formattedRichText = new HSSFRichTextString(TDtext);
 
@@ -247,7 +250,8 @@ namespace Spreadsheet_Uploader {
 
 
             }
-
+          
+            
             return formattedRichText;
 
 
@@ -369,6 +373,8 @@ namespace Spreadsheet_Uploader {
 
                             //save formatted value into cell
                             cell.SetCellValue(formattedRichText);
+
+                           
 
                             mergeRegionCount += 1;
                             colspan = 0;

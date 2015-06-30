@@ -9,15 +9,17 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Text;
 using System.Collections;
+using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Data.OleDb;
+using System.Data;
+using System.IO;
+
 using umbraco.cms.businesslogic.web;
 using umbraco.cms.businesslogic.datatype;
 using umbraco;
 using umbraco.NodeFactory;
 using umbraco.editorControls;
-using System.Data.OleDb;
-using System.Data;
-using System.IO;
 
 using NPOI.HSSF.UserModel;
 using NPOI.HPSF;
@@ -36,6 +38,7 @@ namespace Spreadsheet_Uploader
         int nodeID = Convert.ToInt32(HttpContext.Current.Request.QueryString["nodeID"]);
         string strAlias = HttpContext.Current.Request.QueryString["alias"];
         string strEnableEmphClass = HttpContext.Current.Request.QueryString["emph"];
+        string culture = HttpContext.Current.Request.QueryString["culture"];
         string boldClass = GlobalVariables.boldClass;
         
 
@@ -75,6 +78,8 @@ namespace Spreadsheet_Uploader
                 boldClass = "";
                 hfBoldClass.Value = "false";
             }
+
+            
             
             XmlDocument XMLDoc = new XmlDocument();
             string strTheDoc = "<table class='no-class'><thead></thead><tbody></tbody></table>";
@@ -275,7 +280,32 @@ namespace Spreadsheet_Uploader
                             
                         }
                         if (cell.CellType != NPOI.SS.UserModel.CellType.STRING) {
+
+                            //var dateStyle = hssfwb.CreateCellStyle()
+                            //dateStyle.DataFormat.ToString(
+                            //cell.setCellStyle(dateStyle);
+                            //IFormatProvider fprovider = new IFormatProvider();
+                            //try
+                            //{
+                            //    ////cell.CellStyle.DataFormat.ToString(
+                            //    //NumberFormatInfo nfi = new CultureInfo("en-GB").NumberFormat;
+                            //    //nfi.NumberDecimalSeparator = ",";
+                            //    //decimal cellValue = (decimal)Decimal.Parse(cell.NumericCellValue.ToString("#,##.00", CultureInfo.GetCultureInfo("if-IT")));
+                            //    //cell.SetCellValue(cellValue.ToString());
+                            //    //umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 42424242, "new number: " + cellValue);
+                            //}
+                            //catch(Exception e)
+                            //{
+                            //    umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 42424242, "error: " + e.ToString());
+                            //}
+
+
                             cell.SetCellType(NPOI.SS.UserModel.CellType.STRING);
+
+                            if (culture == "false")
+                            {
+                                cell.SetCellValue(cell.StringCellValue.Replace(',', '$').Replace('.', ',').Replace('$', '.'));
+                            }
                         }
 
                         if (cell.CellStyle.FillForegroundColor != 64)
@@ -289,7 +319,7 @@ namespace Spreadsheet_Uploader
                         var rts = cell.RichStringCellValue;
                         string fullCellValue = "";
                         if (!repeatedCell) {
-
+                            
                             if (rts.NumFormattingRuns > 0) {
                                 for (formattingRunIndex = 0; formattingRunIndex < rts.NumFormattingRuns; formattingRunIndex++) {
                                     // Get that point in the cells text where the next formatting run will begin. Use this to
@@ -325,6 +355,8 @@ namespace Spreadsheet_Uploader
                                         strSearchTable += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
                                         fullCellValue += HttpUtility.HtmlEncode(rts.ToString().Substring(fromIndex, subStringLength));
                                     }
+
+                                    
                                     font = hssfwb.GetFontAt(rts.GetFontAtIndex(rts.GetIndexOfFormattingRun(formattingRunIndex)));
 
                                     // Make sure that the starting point for the next
@@ -420,7 +452,6 @@ namespace Spreadsheet_Uploader
                             strTable += "</td>";
 
                      
-
                             spreadSheetCell.Value = Regex.Replace(fullCellValue, "&nbsp;", " ");
                             repeatedCell = false;
 
@@ -465,7 +496,7 @@ namespace Spreadsheet_Uploader
                 {
 
                     result.Append("<td ");
-
+                    
                     result.Append("class='");
                     result.Append(cell.Class);
                     result.Append("' ");

@@ -21,6 +21,7 @@ namespace Spreadsheet_Uploader {
         private TextBox _csvBox;
         private CheckBoxList checkboxList;
         private CheckBoxList checkboxEmph;
+        private CheckBoxList checkboxCult;
         
         public SpreadsheetPrevalueEditor(umbraco.cms.businesslogic.datatype.BaseDataType DataType)
         {
@@ -46,6 +47,12 @@ namespace Spreadsheet_Uploader {
             checkboxEmph.CssClass = "spreadsheetOptions";
             checkboxEmph.Items.Add(new ListItem("Enable Cell Color as Emphasis Class", "on"));
             Controls.Add(checkboxEmph);
+
+            checkboxCult = new CheckBoxList();
+            checkboxCult.ID = "Culture";
+            checkboxCult.CssClass = "spreadsheetOptions";
+            checkboxCult.Items.Add(new ListItem("Decimal Notation Culture US?", "on"));
+            Controls.Add(checkboxCult);
 
           
         }
@@ -83,6 +90,14 @@ namespace Spreadsheet_Uploader {
                     {
                         checkboxEmph.SelectedValue = "";
                     }
+                    try
+                    {
+                        checkboxCult.SelectedValue = config[3];
+                    }
+                    catch
+                    {
+                        checkboxCult.SelectedValue = "";
+                    }
                 }
                 else
                 {
@@ -95,7 +110,7 @@ namespace Spreadsheet_Uploader {
         public void Save()
         {
             _datatype.DBType = (umbraco.cms.businesslogic.datatype.DBTypes)Enum.Parse(typeof(umbraco.cms.businesslogic.datatype.DBTypes), DBTypes.Ntext.ToString(), true);
-            string data = _csvBox.Text+"|"+checkboxList.SelectedValue + "|"+checkboxEmph.SelectedValue;
+            string data = _csvBox.Text + "|" + checkboxList.SelectedValue + "|" + checkboxEmph.SelectedValue + "|" + checkboxCult.SelectedValue;
             umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 7777, "checkBox: " + checkboxList.SelectedValue);
             SqlHelper.ExecuteNonQuery("delete from cmsDataTypePreValues where datatypenodeid = @dtdefid", SqlHelper.CreateParameter("@dtdefid", _datatype.DataTypeDefinitionId));
             SqlHelper.ExecuteNonQuery("insert into cmsDataTypePreValues (datatypenodeid,[value],sortorder,alias) values (@dtdefid,@value,0,'')",SqlHelper.CreateParameter("@dtdefid", _datatype.DataTypeDefinitionId), SqlHelper.CreateParameter("@value", data));
@@ -108,6 +123,7 @@ namespace Spreadsheet_Uploader {
 
             checkboxList.RenderControl(writer);
             checkboxEmph.RenderControl(writer);
+            checkboxCult.RenderControl(writer);
         }
 
         public string Configuration
