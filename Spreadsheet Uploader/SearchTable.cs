@@ -11,6 +11,7 @@ using System.Data;
 using System.IO;
 
 using Umbraco.Core;
+using Umbraco.Core.Services;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 using Umbraco.Core.Publishing;
@@ -56,25 +57,31 @@ namespace spreadsheet_Uploader
                 foreach (var item in args.PublishedEntities)
                 {
 
-                    
+                    umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 59");
                     UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
                     IPublishedContent publishedContent = UMHelper.TypedContent(item.Id);
-
+                    var contentService = new ContentService();
+                    IContent content = contentService.GetById(item.Id);
                     //If current Item is a product page
                     if (System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + item.ContentType.Alias] != null)
                     {
                         
                         newPage = xmlDoc.CreateNode(XmlNodeType.Element, "page", null);
-
+                        umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 68");
                         XmlAttribute id = xmlDoc.CreateAttribute("nodeId");
                         XmlAttribute pageName = xmlDoc.CreateAttribute("pageName");
-
-                        pageName.Value = publishedContent.Name;
+                        try
+                        {
+                            pageName.Value = content.Name;
+                        }
+                        catch
+                        {
+                        }
                         id.Value = item.Id.ToString();
 
 
                         XmlAttribute url = xmlDoc.CreateAttribute("url");
-                        umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "hey");
+                        umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 77");
                         
                         //var newUrl = new UmbracoHelper(UmbracoContext.Current).NiceUrl(item.Id);
                         //umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "Page: " + newUrl);
@@ -176,9 +183,10 @@ namespace spreadsheet_Uploader
                                         xTable.Attributes.Append(xTableName);
                                         umbraco.BusinessLogic.Log.Add(umbraco.BusinessLogic.LogTypes.Custom, 9999999, "AT 174: ");
                                         var thePathParam = "";
-                                        if (publishedContent.Path != null)
+                                        
+                                        if (content.Path != null)
                                         {
-                                            thePathParam = publishedContent.Path;
+                                            thePathParam = content.Path;
                                         }
                                         sb.Append(DeSpanTables(xmlDoc, xTable, item.Id.ToString(), thePathParam, cmsTab));
 
@@ -259,7 +267,17 @@ namespace spreadsheet_Uploader
                             UmbracoHelper UMHelper = new UmbracoHelper(UmbracoContext.Current);
                             IPublishedContent publishedContent = UMHelper.TypedContent(args.Entity.Id);
 
-                            pageNode.Attributes["url"].Value = publishedContent.Url;
+
+                            var contentService = new ContentService();
+                            IContent content = contentService.GetById(args.Entity.Id);
+                            try
+                            {
+                                pageNode.Attributes["url"].Value = publishedContent.Url;
+                            }
+                            catch
+                            {
+
+                            }
                             xmlDoc.Save(HttpContext.Current.Server.MapPath(strFilePath));
                     }
                 };
