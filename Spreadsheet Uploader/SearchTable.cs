@@ -247,7 +247,7 @@ namespace spreadsheet_Uploader
 
                     
                 }
-
+                xmlDoc.Save(HttpContext.Current.Server.MapPath(strFilePath));
 
                  
 
@@ -256,9 +256,6 @@ namespace spreadsheet_Uploader
             Umbraco.Core.Services.ContentService.Moved += (sender, args) =>
                     {
                
-                   
-
-
                     if (System.Web.Configuration.WebConfigurationManager.AppSettings["SST:" + args.Entity.ContentType.Alias] != null)
                     {
                         XmlNode pageNode = xmlDoc.SelectSingleNode("//page[@nodeId ='" + args.Entity.Id.ToString() + "']");
@@ -281,6 +278,26 @@ namespace spreadsheet_Uploader
                             xmlDoc.Save(HttpContext.Current.Server.MapPath(strFilePath));
                     }
                 };
+
+            Umbraco.Core.Services.ContentService.Deleted += (sender, args) =>
+            {
+
+
+                xmlDoc.Load(HttpContext.Current.Server.MapPath(strFilePath));
+                
+
+                foreach (var item in args.DeletedEntities)
+                {
+                    // HttpContext.Current.Response.Write("outside if");
+                    XmlNode pageNode = xmlDoc.SelectSingleNode("//page[@nodeId ='" + item.Id.ToString() + "']");
+
+                    if (pageNode != null)
+                    {
+                        xmlDoc.SelectSingleNode("tableIndexer").RemoveChild(pageNode);
+                    }
+                }
+                xmlDoc.Save(HttpContext.Current.Server.MapPath(strFilePath));
+            };
 
             PublishingStrategy.Published += PublishingStrategy_Published;
             PublishingStrategy.UnPublished += PublishingStrategy_Unpublished;
